@@ -1,0 +1,144 @@
+.subHeader {
+    height: 30vh;
+    display: grid;
+    grid-template-columns: 5fr 2fr 5fr;
+    align-items: center;
+    justify-items: center;
+    border-bottom: 1px solid lightgrey;
+}
+
+.subHeaderIcon {
+    width: 100px !important;
+    height: 100px !important;
+    border-radius: 50px !important;
+}
+
+.nameContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+}
+
+.profileName {
+    margin: 0;
+    padding: 0;
+}
+
+.profileFollowers {
+    margin: 0;
+    padding: 0;
+}
+.followButton {
+    background: white;
+    border: 1px solid lightgrey;
+    border-radius: 25px;
+    padding: 5px;
+    font-weight: bold;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 10px;
+}
+
+.followButton:hover {
+    background: rgb(225, 225, 225);
+    cursor: pointer;
+}
+
+.buttonStyle {
+    margin: 0 0.5rem;
+}
+
+.tabSection {
+    min-height: 18vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+}
+
+.tab {
+    background: white;
+    border: 1px solid lightgrey;
+    border-radius: 25px;
+    padding: 10px 20px 10px 20px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.activeTab {
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px 10px 20px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.activePanel {
+    display: grid;
+    justify-items: center;
+    margin-bottom: 50px;
+}
+
+.gridContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+    grid-gap: 20px;
+}
+.gridContainer1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    grid-gap: 20px;
+}
+
+.card {
+    height: 33vh;
+    width: 26vw;
+}
+
+.cardImg {
+    height: 32vh;
+}
+
+.cardHeader {
+    padding-left: 10px;
+}
+
+.postContainer1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    grid-gap: 10px;
+}
+
+.spinner {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: auto
+}
+
+.favoritePost {
+    width: 200px;
+    height: auto;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+.boardLink {
+    text-decoration: none;
+    color: black;
+}
+
+.boardPreview {
+    display: grid;
+    height: 25vh;
+    overflow: hidden;
+}

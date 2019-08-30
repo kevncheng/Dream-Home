@@ -1,0 +1,82 @@
+const { User, Follow } = require ('../../../src/models');
+
+const users = [
+    {
+        name: 'eric cartman',
+        username: 'thecoon',
+        email: 'thecoon@gmail.com',
+        password: 'screwyouguysimgoinghome'
+    },
+    {
+        name: 'kenny mccormick',
+        username: 'mysterion',
+        email: 'mysteron@gmail.com',
+        password: 'imdeadagain'
+    },
+    {
+        name: 'kyle broflovksi',
+        username: 'ginger',
+        email: 'ginger@gmail.com',
+        password: 'ihateeric'
+    },
+    {
+        name: 'stan marsh',
+        username: 'marsh',
+        email: 'marsh@gmail.com',
+        password: 'wendy123'
+    }
+];
+
+const addUsers = async () => {
+    let userArray = [];
+    for (const user of users) {
+        userArray.push (await User.create (user));
+    }
+
+    return userArray;
+};
+
+module.exports = async () => {
+    const userArray = await addUsers ();
+
+    /* Kenny
+       following -> kyle, stan
+       followers -> eric, kyle, stan
+     */
+    await Follow.create ({
+        'followee': userArray[1]._id,
+        'follower': userArray[0]._id
+    });
+
+    await Follow.create ({
+        'followee': userArray[1]._id,
+        'follower': userArray[2]._id
+    });
+
+    await Follow.create ({
+        'followee': userArray[1]._id,
+        'follower': userArray[3]._id
+    });
+
+    await Follow.create ({
+        'followee': userArray[2]._id,
+        'follower': userArray[1]._id
+    });
+
+    await Follow.create ({
+        'followee': userArray[3]._id,
+        'follower': userArray[1]._id
+    });
+
+    await Follow.create ({
+        'followee': userArray[3]._id,
+        'follower': userArray[2]._id
+    });
+
+    await Follow.create ({
+        'followee': userArray[2]._id,
+        'follower': userArray[3]._id
+    });
+
+    return userArray;
+};

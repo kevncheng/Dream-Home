@@ -1,0 +1,27 @@
+.spinner {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: auto
+}
+
+.postImg {
+    width: 20vw;
+    height: auto;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.boardTitle {
+    text-align: center;
+    text-decoration: underline;
+    margin: 35px;
+}
+
+.grid {
+    display: grid;
+    justify-content: center;
+}

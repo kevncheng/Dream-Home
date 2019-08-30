@@ -1,0 +1,99 @@
+.container {
+    display: flex;
+    overflow: hidden;
+}
+
+.splitContainer {
+    flex: 50%;
+}
+
+.create {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 20;
+}
+.dialogAction {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 20;
+}
+
+.chip {
+    color: white;
+}
+
+.filepond--root {
+    height: 300px;
+}
+.filepond--root .filepond--drop-label {
+    flex: 1;
+    background-color: white;
+}
+.filepond--panel-root {
+    background-color: white;
+    z-index: 5;
+}
+
+.smallText {
+    color: gray;
+    position: absolute;
+    bottom: 40px;
+    right: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.fileUpload {
+    height: 300px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.spinner {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+}
+
+.closeButton {
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+    color: gray;
+}
+.closeButton:hover {
+    cursor: pointer;
+    color: black;
+}
+
+.boardList {
+    width: 100px;
+}
+
+.dialogLoading {
+    display: none;
+}
+
+.img {
+    height: 100px;
+    width: 100px;
+    margin: 10;
+}
+
+.img:hover {
+    cursor: pointer;
+}
+
+.DialogContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

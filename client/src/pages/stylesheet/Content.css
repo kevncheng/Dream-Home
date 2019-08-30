@@ -1,0 +1,44 @@
+.placeholder {
+    min-height: 7vh;
+    height: 7vh;
+}
+
+.buttonmenu {
+    display: grid;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+.buttongrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 10px;
+}
+
+.option {
+    background: white;
+    border-radius: 20px;
+    border: 1px solid lightgrey;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.option:hover {
+    background: rgb(225, 225, 225)
+}
+
+.img {
+    width: 20vw;
+    height: auto;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+.spinner {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: auto
+}
