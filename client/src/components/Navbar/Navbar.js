@@ -98,7 +98,7 @@ const Navbar = ({ userStore, logout, history, location, searchPosts }) => {
                     </div>
                     <div>
                         <Link
-                            to={''}
+                            to={`/profile/${userStore.user.username}`}
                             style={{
                                 textDecoration: 'none'
                             }}>
@@ -108,7 +108,7 @@ const Navbar = ({ userStore, logout, history, location, searchPosts }) => {
                                 borderRadius: '7.5px'
                             }}
                             >
-                                Following
+                                Profile
                             </Button>
                         </Link>
                     </div>

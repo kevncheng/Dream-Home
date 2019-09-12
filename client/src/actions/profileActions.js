@@ -170,7 +170,12 @@ export const editProfile = (formData, username) => async dispatch => {
     } catch (err) {
         dispatch({
             type: EDIT_PROFILE_FAIL,
-            payload: { error: 'Something went wrong with updating the profile' }
+            payload: {
+                error: {
+                    message: 'Something went wrong with updating the profile',
+                    status: 'error'
+                }
+            }
         });
     }
 };
@@ -198,7 +203,10 @@ export const deleteItem = (item, id) => async dispatch => {
             payload: {
                 item,
                 id,
-                error: { message: `Successfully deleted the ${item.slice(0, -1)}`, status: 'success' }
+                error: {
+                    message: `Successfully deleted the ${item.slice(0, -1)}`,
+                    status: 'success'
+                }
             }
         });
     } catch (err) {

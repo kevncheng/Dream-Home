@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import UserStore from './user';
+import UserStore from './userReducer';
 import PostStore from './post';
 import ProfileStore from './profileReducer';
 import posts from './postFetch';

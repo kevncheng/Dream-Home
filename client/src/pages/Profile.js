@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import SnackBar from '../components/SnackBar/SnackBar';
-import Avatar from '@material-ui/core/Avatar';
 import { Card, Typography } from '@material-ui/core';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import BoardPreview from '../components/Posts/BoardPreview';
 import { Route, Link, withRouter } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InterestQuizDialog from '../components/Dialog/InterestQuizDialog/QuizDialog';
@@ -23,8 +23,8 @@ import {
 import Posts from '../components/Posts/Posts';
 import _ from 'lodash';
 import './stylesheet/Profile.css';
-import BoardPreview from '../components/Posts/BoardPreview';
-import Tooltip from '@material-ui/core/Tooltip';
+import Masonry from 'react-masonry-component';
+import ProfilePic from '../components/Profile/ProfilePic';
 
 class Profile extends Component {
     state = {
@@ -36,7 +36,7 @@ class Profile extends Component {
     componentDidMount () {
         const username = this.props.match.params.username;
         this.setState({ username: username });
-        this.props.getBoardsandPosts(username);
+        this.props.fetchProfileInfo(username);
     }
 
     toggleTabs = item => {
@@ -47,14 +47,22 @@ class Profile extends Component {
         this.props.history.push(`/profile/${this.state.username}/${item}/create`);
     };
 
+    onCreateBoardPress = () => {
+        this.props.history.push(`/profile/${this.state.username}/board/create`);
+    };
+
+    onCreatePostPress = () => {
+        this.props.history.push(`/profile/${this.state.username}/post/create`);
+    };
+
     onFollowPress = () => {
         const {
-            userStore: { authenticated },
-            user,
+            userStore: { authenticated, user },
+            profileStore: { profileInfo },
             history,
             followUser
         } = this.props;
-        const followee = user(this.state.username)._id;
+        const followee = profileInfo._id;
         const currentUserId = user._id;
         if (!authenticated) {
             history.push('/login');
@@ -66,30 +74,28 @@ class Profile extends Component {
 
     onUnfollowPress = () => {
         const {
-            userStore,
-            user,
+            userStore: { user },
+            profileStore: { profileInfo },
             unfollowUser
         } = this.props;
-        const currentUserId = userStore.user._id;
-        const followee = user(this.state.username)._id;
+        const currentUserId = user._id;
+        const followee = profileInfo._id;
         unfollowUser(followee, currentUserId);
         this.setState({ followedOrNot: !this.state.followedOrNot });
     };
 
     checkFollowing = () => {
         const {
-            userStore,
-            user
+            userStore: { user },
+            profileStore: {
+                profileInfo: { followers }
+            }
         } = this.props;
-        const res = user(this.state.username).followers.filter(follower => follower._id === userStore.user._id);
+        const res = _.filter(followers, follower => follower._id === user._id);
         return _.isEmpty(res);
     };
 
     renderFollowButton = () => {
-        if (!this.props.userStore.authenticated) {
-            return null;
-        }
-
         return this.checkFollowing() ? (
             <Button className="followButton" color="primary" onClick={() => this.onFollowPress()}>
                 Follow!
@@ -107,7 +113,7 @@ class Profile extends Component {
     };
 
     renderBoards = () => {
-        const { boards } = this.props.user(this.state.username);
+        const { boards } = this.props.profileStore.profileInfo;
         return boards.length === 0 ? (
             <h2>There are no boards</h2>
         ) : (
@@ -153,7 +159,7 @@ class Profile extends Component {
     };
 
     renderPosts = () => {
-        const { posts } = this.props.user(this.state.username);
+        const { posts } = this.props.profileStore.profileInfo;
         return posts.length === 0 ? (
             <h2>There are no posts</h2>
         ) : (
@@ -164,22 +170,35 @@ class Profile extends Component {
     };
 
     renderFavorites = () => {
-        const { favourites } = this.props.user(this.state.username);
-        return favourites.length === 0 ? <h2>There are no favorite posts</h2>
-            : <div style={{ width: '100vw' }}><Posts posts={favourites}/></div>;
+        const favoritePosts = [];
+        const favorites = favoritePosts.map(function (el) {
+            return <img className="favoritePost" alt="" src={el} key={el} />;
+        });
+        return favoritePosts.length === 0 ? (
+            <h2>You have no favorite posts</h2>
+        ) : (
+            <Masonry
+                className="masonry"
+                elementType={'div'}
+                options={{ fitWidth: true, gutter: 15 }}
+            >
+                {favorites}
+            </Masonry>
+        );
     };
 
     renderCreateButtons = () => {
         const {
-            userStore,
-            user
+            userStore: { user, authenticated },
+            profileStore: { profileInfo }
         } = this.props;
-        if (userStore.authenticated) {
-            if (user(this.state.username)._id !== userStore.user._id) {
-                return <>{this.renderFollowButton()}</>;
+        if (authenticated) {
+            if (profileInfo._id !== user._id) {
+                // return <>{this.renderFollowButton()}</>;
+                return <div/>;
             }
-        } else if (!userStore.authenticated) {
-            return <>{this.renderFollowButton()}</>;
+        } else if (!authenticated) {
+            return <div/>;
         }
         return (
             <>
@@ -226,14 +245,24 @@ class Profile extends Component {
         }
     };
 
+    isCurrentUser = () => {
+        const { profileStore: { profileInfo }, userStore } = this.props;
+        if (!userStore.authenticated) {
+            return false;
+        } else if (userStore.user._id === profileInfo._id) {
+            return true;
+        }
+        return false;
+    }
+
     render () {
         const {
-            user,
-            profileStore: { loading }
+            profileStore: { profileInfo, loading }
         } = this.props;
-        if (_.isUndefined(user(this.state.username)) || loading) {
+        if (_.isUndefined(profileInfo) || loading) {
             return <CircularProgress className="spinner" />;
         }
+        console.log(profileInfo)
         return (
             <div>
                 <Route path="/profile/:username/edit" component={EditPicUserDialog} />
@@ -245,20 +274,17 @@ class Profile extends Component {
                 <Route path="/profile/:username/board/create" component={BoardDialog} />
                 <div className="subHeader">
                     <div className="nameContainer">
-                        <Tooltip title="Edit Profile">
-                            <Avatar
-                                className="subHeaderIcon"
-                                component={Link}
-                                src={user(this.state.username).profile}
-                                to={'/profile/' + user(this.state.username).username + '/edit'}
-                            />
-                        </Tooltip>
+                        <ProfilePic
+                            profile = {profileInfo.profile}
+                            username = {profileInfo.username}
+                            isCurrentUser = {this.isCurrentUser()}
+                        />
                         <div>
-                            <h3 className="profileName">{user(this.state.username).name}</h3>
-                            <h5 className="profileFollowers">
-                                {user(this.state.username).followers} Followers |{' '}
-                                {user(this.state.username).following} Following
-                            </h5>
+                            <h3 className="profileName">{profileInfo.name}</h3>
+                            {/* <h5 className="profileFollowers">
+                                {profileInfo.followers} Followers |{' '}
+                                {profileInfo.following} Following
+                            </h5> */}
                         </div>
                     </div>
                     <div />
@@ -300,7 +326,7 @@ class Profile extends Component {
                     <div className="activePanel">
                         <div
                             className={
-                                user(this.state.username).boards.length === 0 ? 'gridContainer1' : 'gridContainer'
+                                profileInfo.boards.length === 0 ? 'gridContainer1' : 'gridContainer'
                             }
                         >
                             {this.renderBoards()}
@@ -343,7 +369,7 @@ class Profile extends Component {
                     <div className="Panel">
                         <div
                             className={
-                                user(this.state.username).posts.length === 0 ? 'postContainer1' : 'postContainer'
+                                profileInfo.posts.length === 0 ? 'postContainer1' : 'postContainer'
                             }
                         >
                             <div
@@ -393,6 +419,7 @@ class Profile extends Component {
                     <div className="activePanel">{this.renderFavorites()}</div>
                 </div>
                 {this.renderSnackBarError()}
+                {/* <SnackBar variant = 'success' message = 'hello' open ={this.state.SnackBar}/> */}
             </div>
         );
     }
@@ -400,13 +427,7 @@ class Profile extends Component {
 
 const mapStateToProps = state => ({
     userStore: state.UserStore,
-    profileStore: state.ProfileStore,
-    user: (username) => {
-        if (state.UserStore.authenticated && state.UserStore.user.username === username) {
-            return state.UserStore.user;
-        }
-        return state.ProfileStore.profileInfo;
-    }
+    profileStore: state.ProfileStore
 });
 
 const mapDispatchToProps = dispatch => {

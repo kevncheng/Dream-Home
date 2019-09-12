@@ -136,10 +136,6 @@ const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
                 passwordError: 'Password must contain at least 8 characters'
             });
         }
-
-        // TODO: Fix Signup (fix password validation as well)
-        // if (!password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-zd$@!%*?&].{8,}/)) {
-
         if (username.length < 6 || username.length > 20) {
             setFormData({
                 ...formData,

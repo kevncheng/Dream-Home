@@ -18,13 +18,12 @@ const styles = {
 };
 
 const SignUpForm = ({
-    name,
     username,
     email,
     password,
     password2,
     passwordError,
-    usernameError,
+    emailError,
     onChangeText
 }) => {
     return (
@@ -34,11 +33,9 @@ const SignUpForm = ({
                     label="Username"
                     name="username"
                     value={username}
+                    style={{ width: '400px', marginLeft: '40px', marginRight: '40px' }}
                     onChange={e => onChangeText(e)}
-                    style={{ width: '400px', marginLeft: '40px', marginRight: '40px', marginBottom: '10px' }}
-                    error={Boolean(usernameError)}
-                    helperText={usernameError}
-                    FormHelperTextProps={{ style: { float: 'left', position: 'absolute', bottom: -15 } }}
+                    
                 />
             </DialogContent>
             <DialogContent style={{ marginBottom: '5px' }}>
@@ -48,7 +45,10 @@ const SignUpForm = ({
                     autoComplete = 'off'
                     value={email}
                     onChange={e => onChangeText(e)}
-                    style={{ width: '400px', marginLeft: '40px', marginRight: '40px' }}
+                    style={{ width: '400px', marginLeft: '40px', marginRight: '40px', marginBottom: '10px' }}
+                    FormHelperTextProps={{ style: { float: 'left', position: 'absolute', bottom: -15 } }}
+                    error={Boolean(emailError)}
+                    helperText={emailError}
                 />
             </DialogContent>
             <DialogContent style={{ marginBottom: '5px' }}>
