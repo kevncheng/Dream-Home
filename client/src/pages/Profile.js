@@ -125,7 +125,7 @@ class Profile extends Component {
                             className="boardLink"
                         >
                             <CardActionArea>
-                                <BoardPreview posts={board.posts} className='boardPreview'/>
+                                <BoardPreview posts={board.posts} className="boardPreview" />
                             </CardActionArea>
                         </Link>
                         <div
@@ -159,12 +159,17 @@ class Profile extends Component {
     };
 
     renderPosts = () => {
-        const { posts } = this.props.profileStore.profileInfo;
+        const {
+            profileStore: {
+                profileInfo: { posts }
+            },
+            userStore: { user }
+        } = this.props;
         return posts.length === 0 ? (
             <h2>There are no posts</h2>
         ) : (
             <div style={{ width: '100vw' }}>
-                <Posts posts={posts} />
+                <Posts posts={posts} deleteAuth={true} user={user._id} />
             </div>
         );
     };
@@ -195,10 +200,10 @@ class Profile extends Component {
         if (authenticated) {
             if (profileInfo._id !== user._id) {
                 // return <>{this.renderFollowButton()}</>;
-                return <div/>;
+                return <div />;
             }
         } else if (!authenticated) {
-            return <div/>;
+            return <div />;
         }
         return (
             <>
@@ -246,14 +251,17 @@ class Profile extends Component {
     };
 
     isCurrentUser = () => {
-        const { profileStore: { profileInfo }, userStore } = this.props;
+        const {
+            profileStore: { profileInfo },
+            userStore
+        } = this.props;
         if (!userStore.authenticated) {
             return false;
         } else if (userStore.user._id === profileInfo._id) {
             return true;
         }
         return false;
-    }
+    };
 
     render () {
         const {
@@ -262,7 +270,6 @@ class Profile extends Component {
         if (_.isUndefined(profileInfo) || loading) {
             return <CircularProgress className="spinner" />;
         }
-        console.log(profileInfo)
         return (
             <div>
                 <Route path="/profile/:username/edit" component={EditPicUserDialog} />
@@ -275,9 +282,9 @@ class Profile extends Component {
                 <div className="subHeader">
                     <div className="nameContainer">
                         <ProfilePic
-                            profile = {profileInfo.profile}
-                            username = {profileInfo.username}
-                            isCurrentUser = {this.isCurrentUser()}
+                            profile={profileInfo.profile}
+                            username={profileInfo.username}
+                            isCurrentUser={this.isCurrentUser()}
                         />
                         <div>
                             <h3 className="profileName">{profileInfo.name}</h3>

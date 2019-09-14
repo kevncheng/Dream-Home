@@ -62,9 +62,22 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Posts = ({ posts }) => {
+const Posts = ({ posts, deleteAuth, user = '' }) => {
     const classes = useStyles();
-
+    const renderDeleteButton = post => {
+        if (deleteAuth) {
+            if (user === post.user._id) {
+                return (
+                    <DeleteButton
+                        item="posts"
+                        id={post._id}
+                        title={post.title}
+                        className={classes.deleteIconContainer}
+                    />
+                );
+            }
+        }
+    };
     const images = posts.map((post, i) => {
         return (
             <div className={classes.imageContainer} key={i}>
@@ -72,12 +85,7 @@ const Posts = ({ posts }) => {
                     <img src={post.image} alt={post.title} className={classes.image} />
                     <p className={classes.title}>{post.title}</p>
                 </Link>
-                <DeleteButton
-                    item="posts"
-                    id={post._id}
-                    title={post.title}
-                    className={classes.deleteIconContainer}
-                />
+                {renderDeleteButton(post)}
             </div>
         );
     });

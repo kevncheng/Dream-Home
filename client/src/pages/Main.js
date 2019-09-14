@@ -10,7 +10,7 @@ import _ from 'lodash';
 import Posts from '../components/Posts/Posts';
 import SnackBar from '../components/SnackBar/SnackBar';
 import { CircularProgress } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 
 import './stylesheet/Content.css';
 
@@ -53,7 +53,7 @@ class Search extends Component {
         return (
             <div>
                 <div className='placeholder' />
-                <div className='buttonmenu'>
+                {/* <div className='buttonmenu'>
                     <div className='buttongrid'>
                         <Button className='option'>Cozy</Button>
                         <Button className='option'>Bohemian</Button>
@@ -63,7 +63,7 @@ class Search extends Component {
                         <Button className='option'>Traditional</Button>
                         <Button className='option'>Simple</Button>
                     </div>
-                </div>
+                </div> */}
                 <div>
                     {this.renderPosts()}
                 </div>
