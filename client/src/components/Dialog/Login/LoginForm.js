@@ -53,28 +53,49 @@ const LoginForm = ({ handleChange, handleSignIn, email, password, disabled }) =>
 
     const FormHelper = ({ input }) => {
         if (input.error) {
-            return (
-                <FormHelperText id="error">{input.message}</FormHelperText>
-            );
+            return <FormHelperText id="error">{input.message}</FormHelperText>;
         }
         return null;
     };
 
     return (
         <div className={classes.root}>
-            <form onSubmit={handleSignIn} className="needs-validation" noValidate>
+            <form onSubmit={() => handleSignIn()} className="needs-validation" noValidate>
                 <FormControl className={classes.formControl} error={email.error}>
-                    <Input type="email" id="email" name="email" placeholder="Enter your email" value={email.value} onChange={handleChange} classes={{ input: classes.input }} required />
-                    <FormHelper input={email}/>
+                    <Input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        value={email.value}
+                        onChange={e => handleChange(e)}
+                        classes={{ input: classes.input }}
+                        required
+                    />
+                    <FormHelper input={email} />
                 </FormControl>
                 <FormControl className={classes.formControl} error={password.error}>
-                    <Input type="password" id="password" name="password" placeholder="Password" value={password.value} onChange={handleChange} classes={{ input: classes.input }} required />
+                    <Input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Password"
+                        value={password.value}
+                        onChange={e => handleChange(e)}
+                        classes={{ input: classes.input }}
+                        required
+                    />
                     <FormHelper input={password} />
                     <p className={classes.forgotPassword}>Forgot your password?</p>
                 </FormControl>
                 <div>
-                    <Button type="submit" color="primary" className={classes.button} href={''}
-                        disabled={(!(!email.error && !password.error)) || disabled}>
+                    <Button
+                        type="submit"
+                        color="primary"
+                        className={classes.button}
+                        href={''}
+                        disabled={!(!email.error && !password.error) || disabled}
+                    >
                         Login
                     </Button>
                 </div>

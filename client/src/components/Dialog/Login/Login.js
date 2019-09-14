@@ -52,14 +52,14 @@ class Login extends React.Component {
         };
     }
 
-    handleChange (e) {
+    handleChange = e => {
         const name = e.target.name;
         const value = e.target.value;
 
         this.state[name].validator(value);
-    }
+    };
 
-    handleSignIn (e) {
+    handleSignIn = e => {
         e.preventDefault();
 
         this.props.login({
@@ -68,67 +68,54 @@ class Login extends React.Component {
         });
 
         this.setState({ snackBar: true });
-    }
+    };
 
     handleClose = () => {
         this.setState({ open: false });
         this.props.history.push('/');
     };
 
-    snackBarClose (event, reason) {
+    snackBarClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
 
         this.setState({ snackBar: false });
         this.props.dispatch(loginResponse());
-    }
+    };
 
     ServerResponse = () => {
-        if (this.props.userStore.authenticated) {
+        const {
+            userStore: { authenticated, error }
+        } = this.props;
+        if (authenticated) {
             return (
-                <SnackBar message={'Authentication Success'} variant={'success'} open={this.state.snackBar}
-                    onClose={this.snackBarClose} duration={2000}/>
+                <SnackBar
+                    message={error.message}
+                    variant={error.status}
+                    open={this.state.snackBar}
+                    onClose={this.snackBarClose}
+                    duration={2000}
+                />
             );
-        } else if (!this.props.userStore.authenticated && this.props.userStore.error) {
+        } else if (!authenticated && error) {
             return (
-                <SnackBar message={'Authentication Failed: email or password is incorrect'} variant={'error'}
-                    open={this.state.snackBar} onClose={this.snackBarClose} duration={3000}/>
+                <SnackBar
+                    message={error.message}
+                    variant={error.status}
+                    open={this.state.snackBar}
+                    onClose={this.snackBarClose}
+                    duration={3000}
+                />
             );
         }
 
         return null;
     };
 
-    render () {
-        const { classes } = this.props;
-
-        if (this.props.userStore.authenticated && !this.state.snackBar) {
-            return (<Redirect to={'/profile/' + this.props.userStore.user.username} />);
-        }
-
-        return (
-            <div>
-                <Dialog onClose={this.handleClose} aria-labelledby="dialog-title" open={this.state.open} maxWidth={'md'}>
-                    <this.Loading/>
-                    <DialogTitle id="title" title={'Welcome!'} onClose={this.handleClose} />
-                    <DialogContent>
-                        <LoginForm handleChange={this.handleChange} handleSignIn={this.handleSignIn}
-                            email={this.state.email} password={this.state.password}
-                            disabled={this.state.snackBar}/>
-                    </DialogContent>
-                    <div className={classes.footer}>
-                        <p className={classes.p}>{'Don\'t have an account?'}<Link to='/signup' className={classes.signUp}> Sign Up!</Link></p>
-                    </div>
-                </Dialog>
-                <this.ServerResponse />
-            </div>
-        );
-    }
-
     Loading = () => {
         if (this.state.snackBar) {
-            return <LinearProgress/>;
+            return <LinearProgress />;
         }
 
         return null;
@@ -144,7 +131,7 @@ class Login extends React.Component {
             email.message = 'Email must not be empty';
         } else if (!emailPattern.test(value)) {
             email.error = true;
-            email.message = 'Email must not be valid';
+            email.message = 'Email is not valid';
         } else {
             email.error = false;
             email.message = '';
@@ -168,6 +155,47 @@ class Login extends React.Component {
 
         this.setState({ password });
     }
+
+    render () {
+        const { classes } = this.props;
+
+        if (this.props.userStore.authenticated && !this.state.snackBar) {
+            return <Redirect to={'/profile/' + this.props.userStore.user.username} />;
+        }
+
+        return (
+            <div>
+                <Dialog
+                    onClose={this.handleClose}
+                    aria-labelledby="dialog-title"
+                    open={this.state.open}
+                    maxWidth={'md'}
+                >
+                    <this.Loading />
+                    <DialogTitle id="title" title={'Welcome!'} onClose={this.handleClose} />
+                    <DialogContent>
+                        <LoginForm
+                            handleChange={this.handleChange}
+                            handleSignIn={this.handleSignIn}
+                            email={this.state.email}
+                            password={this.state.password}
+                            disabled={this.state.snackBar}
+                        />
+                    </DialogContent>
+                    <div className={classes.footer}>
+                        <p className={classes.p}>
+                            {'Don\'t have an account?'}
+                            <Link to="/signup" className={classes.signUp}>
+                                {' '}
+                                Sign Up!
+                            </Link>
+                        </p>
+                    </div>
+                </Dialog>
+                <this.ServerResponse />
+            </div>
+        );
+    }
 }
 
 const mapStateToProps = state => ({
@@ -184,4 +212,10 @@ function mapDispatchToProps (dispatch) {
     );
 }
 
-export default compose(withStyles(styles), connect(mapStateToProps, mapDispatchToProps))(Login);
+export default compose(
+    withStyles(styles),
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )
+)(Login);
