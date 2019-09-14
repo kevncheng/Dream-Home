@@ -6,7 +6,7 @@ const path = require('path');
 aws.config.update({
     secretAccessKey: process.env.AWS_SECRET_ACCESS,
     accessKeyId: process.env.AWS_ACCESS_KEY,
-    region: 'us-west-2'
+    region: process.env.REGION
 });
 
 const fileFilter = (req, file, cb) => {
@@ -21,7 +21,7 @@ const upload = multer({
     fileFilter,
     storage: multerS3({
         s3: new aws.S3(),
-        bucket: 'team-pineapple',
+        bucket: 'dreamhomenetwork',
         acl: 'public-read',
         key: function (req, file, cb) {
             cb(null, Date.now() + path.extname(file.originalname));

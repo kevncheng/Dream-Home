@@ -59,27 +59,30 @@ class EditPicUserDialog extends Component {
         this.props.history.push(`/profile/${this.state.username}`);
     };
 
-    onSavePress = async () => {
-        if (this.state.name.length < 3 || this.state.name.length > 25) {
+    onSavePress = () => {
+        const { name, imageFile, username } = this.state;
+        const { editProfile, history, profileStore } = this.props;
+        if (name.length < 3 || name.length > 25) {
             this.setState({
                 smallText: 'Name must at least 3 to 25 characters long',
                 nameError: true
             });
         } else {
             const formData = new FormData();
-            if (this.state.imageFile) {
-                formData.append('image', this.state.imageFile);
+            if (imageFile) {
+                formData.append('image', imageFile);
             }
-            if (this.props.profileStore.profileInfo.name !== this.state.name) {
-                formData.append('name', this.state.name);
+            if (profileStore.profileInfo.name !== name) {
+                formData.append('name', name);
             }
-            this.props.editProfile(formData, this.state.username);
-            this.props.history.push(`/profile/${this.state.username}`);
+            editProfile(formData, username);
+            history.push(`/profile/${username}`);
         }
     };
 
     render () {
         this.renderLoading();
+        const { name, nameError, smallText } = this.state;
         return (
             <Dialog
                 open={true}
@@ -121,9 +124,9 @@ class EditPicUserDialog extends Component {
                             label="Name"
                             fullWidth
                             onChange={e => this.onChangeText(e)}
-                            value={this.state.name}
-                            helperText={this.state.smallText}
-                            error={this.state.nameError}
+                            value={name}
+                            helperText={smallText}
+                            error={nameError}
                         />
                     </DialogContent>
                     <DialogActions>
