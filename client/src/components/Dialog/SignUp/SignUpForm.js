@@ -23,6 +23,7 @@ const SignUpForm = ({
     password,
     password2,
     passwordError,
+    usernameError,
     emailError,
     onChangeText
 }) => {
@@ -33,25 +34,27 @@ const SignUpForm = ({
                     label="Username"
                     name="username"
                     value={username}
-                    style={{ width: '400px', marginLeft: '40px', marginRight: '40px' }}
+                    style={{ width: '400px', marginLeft: '40px', marginRight: '40px', marginBottom: '5px' }}
                     onChange={e => onChangeText(e)}
-                    
+                    FormHelperTextProps={{ style: { float: 'left', position: 'absolute', bottom: -15 } }}
+                    error={Boolean(usernameError)}
+                    helperText={usernameError}
                 />
             </DialogContent>
-            <DialogContent style={{ marginBottom: '5px' }}>
+            <DialogContent>
                 <TextField
                     label="E-mail"
                     name="email"
                     autoComplete = 'off'
                     value={email}
                     onChange={e => onChangeText(e)}
-                    style={{ width: '400px', marginLeft: '40px', marginRight: '40px', marginBottom: '10px' }}
+                    style={{ width: '400px', marginLeft: '40px', marginRight: '40px', marginBottom: '5px' }}
                     FormHelperTextProps={{ style: { float: 'left', position: 'absolute', bottom: -15 } }}
                     error={Boolean(emailError)}
                     helperText={emailError}
                 />
             </DialogContent>
-            <DialogContent style={{ marginBottom: '5px' }}>
+            <DialogContent >
                 <TextField
                     label="Password"
                     name="password"
@@ -59,13 +62,13 @@ const SignUpForm = ({
                     type="password"
                     value={password}
                     onChange={e => onChangeText(e)}
-                    style={{ width: '400px', marginLeft: '40px', marginRight: '40px', marginBottom: '10px' }}
+                    style={{ width: '400px', marginLeft: '40px', marginRight: '40px', marginBottom: '5px' }}
                     error={Boolean(passwordError)}
                     helperText={passwordError}
                     FormHelperTextProps={{ style: { float: 'left', position: 'absolute', bottom: -15 } }}
                 />
             </DialogContent>
-            <DialogContent style={{ marginBottom: '5px' }}>
+            <DialogContent>
                 <TextField
                     label="Confirm Password"
                     name="password2"

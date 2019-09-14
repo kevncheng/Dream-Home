@@ -12,7 +12,9 @@ import {
     SAVE_INTERESTS_ERROR,
     CLEAR_ERROR,
     CREATE_POST_LOADING,
-    EDIT_PROFILE_FAIL, DELETE_SUCCESS, DELETE_FAIL
+    EDIT_PROFILE_FAIL,
+    DELETE_SUCCESS,
+    DELETE_FAIL
 } from '../actions/types';
 
 const initialState = {
@@ -27,9 +29,23 @@ export default (state = initialState, action) => {
     case AUTHORIZING:
         return { ...state, loading: true };
     case LOGIN_SUCCESS:
-        return { authenticated: true, user: response.user, token: response.token, loading: false };
+        return {
+            authenticated: true,
+            user: response.user,
+            token: response.token,
+            loading: false,
+            error: { message: 'Authentication Success', status: 'success' }
+        };
     case LOGIN_ERROR:
-        return { ...state, authenticated: false, error: action.error, loading: false };
+        return {
+            ...state,
+            authenticated: false,
+            loading: false,
+            error: {
+                message: 'Authentication Failed: email or password is incorrect',
+                status: 'error'
+            }
+        };
     case LOGIN_RESPONSE:
         return { ...state, error: initialState.error };
     case LOGOUT_SUCCESS:
@@ -65,7 +81,9 @@ export default (state = initialState, action) => {
                 return board;
             });
         }
-        state.user[action.payload.item] = state.user[action.payload.item].filter(item => item._id !== action.payload.id);
+        state.user[action.payload.item] = state.user[action.payload.item].filter(
+            item => item._id !== action.payload.id
+        );
         return {
             ...state,
             loading: false,

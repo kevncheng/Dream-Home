@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Navbar = ({ userStore, logout, history, location, searchPosts }) => {
+const Navbar = ({ userStore: { authenticated, user }, logout, history, location, searchPosts }) => {
     const [search, setSearch] = React.useState('');
     const classes = useStyles();
 
@@ -49,8 +49,8 @@ const Navbar = ({ userStore, logout, history, location, searchPosts }) => {
         event.preventDefault();
         // eslint-disable-next-line camelcase
         const { easy_filters = '' } = queryString.parse(location.search);
-        if (userStore.authenticated) {
-            searchPosts(search, easy_filters, userStore.user._id);
+        if (authenticated) {
+            searchPosts(search, easy_filters, user._id);
         } else {
             searchPosts(search, easy_filters, '');
         }
@@ -98,7 +98,7 @@ const Navbar = ({ userStore, logout, history, location, searchPosts }) => {
                     </div>
                     <div>
                         <Link
-                            to={`/profile/${userStore.user.username}`}
+                            to={authenticated ? `/profile/${user.username}` : '/login'}
                             style={{
                                 textDecoration: 'none'
                             }}>
@@ -114,9 +114,9 @@ const Navbar = ({ userStore, logout, history, location, searchPosts }) => {
                     </div>
                     <div />
                     <NavMenu
-                        user={userStore.user}
+                        user={user}
                         handleLogOutClicked={handleLogOutClicked}
-                        authenticated={userStore.authenticated}
+                        authenticated={authenticated}
                     />
                 </div>
                 <div className={classes.headerBottomBorder} />

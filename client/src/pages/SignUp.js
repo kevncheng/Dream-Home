@@ -115,9 +115,18 @@ const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
         password: '',
         password2: '',
         passwordError: '',
-        usernameError: ''
+        usernameError: '',
+        emailError: ''
     });
-    const { email, username, password, password2, passwordError, usernameError } = formData;
+    const {
+        email,
+        username,
+        password,
+        password2,
+        passwordError,
+        usernameError,
+        emailError
+    } = formData;
 
     const onChangeText = e =>
         setFormData({
@@ -127,26 +136,32 @@ const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
         });
 
     const postInfo = () => {
-        if (password !== password2) {
-            setFormData({ ...formData, passwordError: 'Passwords do not match' });
-        }
-        if (password.length < 8) {
-            setFormData({
-                ...formData,
-                passwordError: 'Password must contain at least 8 characters'
-            });
-        }
-        if (username.length < 6 || username.length > 20) {
-            setFormData({
-                ...formData,
-                usernameError: 'Username must be atleast 6 to 20 characters'
-            });
-        } else if (
-            password === password2 &&
-            password.length > 8 &&
-            username.length > 6 &&
-            username.length < 20
+        const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const update = {};
+        if (
+            password.length < 8 ||
+            username.length < 6 ||
+            username.length > 20 ||
+            !emailPattern.test(email)
         ) {
+            if (password.length < 8) {
+                update.passwordError = 'Password must contain at least 8 characters';
+            } else if (password !== password2) {
+                update.passwordError = 'Passwords do not match';
+            }
+            if (username.length < 6 || username.length > 20) {
+                update.usernameError = 'Username must be atleast 6 to 20 characters';
+            }
+            if (!emailPattern.test(email)) {
+                update.emailError = 'Email is not valid';
+            }
+            setFormData({
+                ...formData,
+                passwordError: update.passwordError,
+                usernameError: update.usernameError,
+                emailError: update.emailError
+            });
+        } else {
             const body = {
                 username,
                 name: username,
@@ -192,6 +207,7 @@ const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
                     password2={password2}
                     passwordError={passwordError}
                     usernameError={usernameError}
+                    emailError={emailError}
                 />
                 <DialogActions>
                     <Button
