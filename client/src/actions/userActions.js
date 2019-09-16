@@ -5,7 +5,8 @@ import {
     LOGOUT,
     AUTHORIZING,
     SIGN_UP_FAIL,
-    SIGN_UP_SUCCESS
+    SIGN_UP_SUCCESS,
+    CLEAR_ERROR
 } from '../actions/types';
 import axios from 'axios';
 
@@ -42,7 +43,11 @@ export const signUp = body => async dispatch => {
     } catch (err) {
         dispatch({
             type: SIGN_UP_FAIL,
-            payload: { message: 'Something went wrong with the registration', status: 'error' }
+            payload: { message: 'Something went wrong with the registration, please try a new username or email.', status: 'error' }
         });
     }
 };
+
+export const clearError = () => ({
+    type: CLEAR_ERROR
+});

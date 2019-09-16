@@ -34,7 +34,7 @@ const SignUpForm = ({
                     label="Username"
                     name="username"
                     value={username}
-                    style={{ width: '400px', marginLeft: '40px', marginRight: '40px', marginBottom: '5px' }}
+                    style={{ width: '400px', marginLeft: '40px', marginRight: '40px', marginBottom: '8px' }}
                     onChange={e => onChangeText(e)}
                     FormHelperTextProps={{ style: { float: 'left', position: 'absolute', bottom: -15 } }}
                     error={Boolean(usernameError)}

@@ -20,7 +20,7 @@ import {
 const initialState = {
     authenticated: false,
     loading: false,
-    error: { message: '', status: null }
+    error: { message: '', status: '' }
 };
 
 export default (state = initialState, action) => {
@@ -92,7 +92,7 @@ export default (state = initialState, action) => {
     case DELETE_FAIL:
         return { ...state, error: action.payload.error };
     case CLEAR_ERROR:
-        return { ...state, error: {} };
+        return { ...state, error: initialState.error };
     default:
         return state;
     }

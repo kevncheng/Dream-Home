@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { signUp, login } from '../actions/userActions';
+import { signUp, login, clearError } from '../actions/userActions';
 import SignUpForm from '../components/Dialog/SignUp/SignUpForm';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,6 +11,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import './stylesheet/SignUp.css';
 import CloseIcon from '@material-ui/icons/Close';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import SnackBar from '../components/SnackBar/SnackBar';
 
 const useStyles = makeStyles({
     container: {
@@ -102,11 +103,16 @@ const useStyles = makeStyles({
             cursor: 'pointer',
             color: 'black'
         }
+    },
+    loader: {
+        position: 'relative',
+        top: '0px',
+        bottom: '0px'
     }
 });
 
 // eslint-disable-next-line react/prop-types
-const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
+const SignUp = ({ history, signUp, login, clearError, userStore: { loading, error } }) => {
     const style = useStyles();
     const [formData, setFormData] = useState({
         name: '',
@@ -137,19 +143,24 @@ const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
 
     const postInfo = () => {
         const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const usernamePattern = /^[a-zA-Z0-9_.-]*$/;
         const update = {};
         if (
             password.length < 8 ||
             username.length < 6 ||
             username.length > 20 ||
-            !emailPattern.test(email)
+            !emailPattern.test(email) ||
+            !usernamePattern.test(username)
         ) {
             if (password.length < 8) {
                 update.passwordError = 'Password must contain at least 8 characters';
-            } else if (password !== password2) {
+            }
+            if (password !== password2) {
                 update.passwordError = 'Passwords do not match';
             }
-            if (username.length < 6 || username.length > 20) {
+            if (!usernamePattern.test(username)) {
+                update.usernameError = 'Username must contain letters and numbers only';
+            } else if (username.length < 6 || username.length > 20) {
                 update.usernameError = 'Username must be atleast 6 to 20 characters';
             }
             if (!emailPattern.test(email)) {
@@ -176,11 +187,6 @@ const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
         history.push('/');
     };
 
-    const renderLoading = () => {
-        if (loading) {
-            return <LinearProgress />;
-        }
-    };
     if (error.status === 'success') {
         login({ email, password });
         history.push('/');
@@ -188,7 +194,9 @@ const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
 
     return (
         <Dialog open={true} aria-labelledby="form-dialog-title" onClick={() => onCloseClick()}>
-            {renderLoading()}
+            <div style={{ visibility: loading ? 'visible' : 'hidden' }}>
+                <LinearProgress/>
+            </div>
             <div onClick={e => e.stopPropagation()}>
                 <CloseIcon
                     className={style.closeButton}
@@ -227,6 +235,13 @@ const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
                     </Link>
                 </p>
             </div>
+            <SnackBar
+                message={error.message}
+                variant={'error'}
+                open={Boolean(error.message)}
+                onClose = {clearError}
+                duration={3000}
+            />
         </Dialog>
     );
 };
@@ -237,5 +252,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { signUp, login }
+    { signUp, login, clearError }
 )(SignUp);
