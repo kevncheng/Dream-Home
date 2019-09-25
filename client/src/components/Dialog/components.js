@@ -21,14 +21,14 @@ const styles = theme => ({
     },
     title: {
         fontWeight: 'bold',
-        fontSize: 26
+        fontSize: 24
     }
 });
 
-const DialogTitle = withStyles(styles)(({ title, classes, onClose }) => {
+const DialogTitle = withStyles(styles)(({ children, classes, onClose }) => {
     return (
         <MuiDialogTitle disableTypography className={classes.root}>
-            <Typography variant="h5" className={classes.title}>{title}</Typography>
+            <Typography variant="h5" className={classes.title}>{children}</Typography>
             <IconButton aria-label="close" className={classes.close} onClick={onClose} href={''}>
                 <CloseIcon />
             </IconButton>

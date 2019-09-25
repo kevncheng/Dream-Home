@@ -6,9 +6,13 @@ import {
     AUTHORIZING,
     SIGN_UP_FAIL,
     SIGN_UP_SUCCESS,
-    CLEAR_ERROR
+    CLEAR_ERROR,
+    SIGN_IN_FAIL,
+    SIGN_IN_SUCCESS,
+    USER_LOADED
 } from '../actions/types';
 import axios from 'axios';
+import setAuthToken from '../utils/setAuthToken';
 
 export const login = user => ({
     type: LOGIN,
@@ -27,6 +31,28 @@ export const getToken = () => ({
     type: GET_TOKEN
 });
 
+export const signIn = body => async dispatch => {
+    const config = {
+        'Content-Type': 'application/json'
+    };
+    try {
+        dispatch({
+            type: AUTHORIZING
+        });
+
+        const res = await axios.post('/users/login', body, config);
+        dispatch({
+            type: SIGN_IN_SUCCESS,
+            payload: res.data
+        });
+        dispatch(loadUser());
+    } catch (err) {
+        dispatch({
+            type: SIGN_IN_FAIL
+        });
+    }
+};
+
 export const signUp = body => async dispatch => {
     try {
         const config = {
@@ -43,7 +69,11 @@ export const signUp = body => async dispatch => {
     } catch (err) {
         dispatch({
             type: SIGN_UP_FAIL,
-            payload: { message: 'Something went wrong with the registration, please try a new username or email.', status: 'error' }
+            payload: {
+                message:
+                    'Something went wrong with the registration, please try a new username or email.',
+                status: 'error'
+            }
         });
     }
 };
@@ -51,3 +81,21 @@ export const signUp = body => async dispatch => {
 export const clearError = () => ({
     type: CLEAR_ERROR
 });
+
+// Load User
+export const loadUser = () => async dispatch => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+
+    try {
+        const res = await axios.get('/users/');
+
+        dispatch({
+            type: USER_LOADED,
+            payload: res.data
+        });
+    } catch (err) {
+        console.log(err);
+    }
+};

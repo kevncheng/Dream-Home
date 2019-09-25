@@ -7,11 +7,12 @@ import SignUpForm from '../components/Dialog/SignUp/SignUpForm';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
+// import DialogTitle from '@material-ui/core/DialogTitle';
 import './stylesheet/SignUp.css';
 import CloseIcon from '@material-ui/icons/Close';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import SnackBar from '../components/SnackBar/SnackBar';
+import { DialogTitle } from '../components/Dialog/components';
 
 const useStyles = makeStyles({
     container: {
@@ -81,9 +82,9 @@ const useStyles = makeStyles({
     },
     footer: {
         borderTop: '1px solid lightgrey',
-        paddingTop: '20px',
-        marginTop: '35px',
-        fontSize: '14px'
+        padding: '18px',
+        fontSize: '14px',
+        height: '100%'
     },
     login: {
         fontWeight: 'bold',
@@ -193,18 +194,21 @@ const SignUp = ({ history, signUp, login, clearError, userStore: { loading, erro
     }
 
     return (
-        <Dialog open={true} aria-labelledby="form-dialog-title" onClick={() => onCloseClick()}>
+        <Dialog open aria-labelledby="form-dialog-title" onClick={() => onCloseClick()}>
             <div style={{ visibility: loading ? 'visible' : 'hidden' }}>
-                <LinearProgress/>
+                <LinearProgress />
             </div>
-            <div onClick={e => e.stopPropagation()}>
-                <CloseIcon
+            <div onClick={e => e.stopPropagation()} style={{ overflow: 'hidden' }}>
+                {/* <CloseIcon
                     className={style.closeButton}
                     fontSize="small"
                     onClick={() => onCloseClick()}
-                />
+                /> */}
 
-                <DialogTitle style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                <DialogTitle
+                    style={{ textAlign: 'center', fontWeight: 'bold' }}
+                    onClose={onCloseClick}
+                >
                     Create an account!
                 </DialogTitle>
                 <SignUpForm
@@ -239,7 +243,7 @@ const SignUp = ({ history, signUp, login, clearError, userStore: { loading, erro
                 message={error.message}
                 variant={'error'}
                 open={Boolean(error.message)}
-                onClose = {clearError}
+                onClose={clearError}
                 duration={3000}
             />
         </Dialog>

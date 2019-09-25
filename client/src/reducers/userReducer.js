@@ -14,18 +14,22 @@ import {
     CREATE_POST_LOADING,
     EDIT_PROFILE_FAIL,
     DELETE_SUCCESS,
-    DELETE_FAIL
+    DELETE_FAIL,
+    SIGN_IN_SUCCESS,
+    SIGN_IN_FAIL
 } from '../actions/types';
 
 const initialState = {
     authenticated: false,
     loading: false,
-    error: { message: '', status: '' }
+    error: { message: '', status: '' },
+    token: localStorage.getItem('token')
 };
 
 export default (state = initialState, action) => {
     const { type, response } = action;
     switch (type) {
+    case CREATE_POST_LOADING:
     case AUTHORIZING:
         return { ...state, loading: true };
     case LOGIN_SUCCESS:
@@ -48,8 +52,21 @@ export default (state = initialState, action) => {
         };
     case LOGIN_RESPONSE:
         return { ...state, error: initialState.error };
+    case SIGN_IN_FAIL:
+        localStorage.removeItem('token');
+        return {
+            ...state,
+            token: null,
+            authenticated: false,
+            loading: false,
+            error: {
+                message: 'The credentials you have provided is incorrect',
+                status: 'error'
+            }
+        };
     case LOGOUT_SUCCESS:
-        return initialState;
+        localStorage.removeItem('token');
+        return { ...state, token: null, authenticated: false, loading: false };
     case SIGN_UP_FAIL:
         return { ...state, loading: false, error: action.payload };
     case SIGN_UP_SUCCESS:
@@ -59,6 +76,16 @@ export default (state = initialState, action) => {
             user: action.payload.user,
             token: action.payload.token,
             error: { message: 'Registration Success!', status: 'success' }
+        };
+    case SIGN_IN_SUCCESS:
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
+        return {
+            ...state,
+            loading: false,
+            authenticated: true,
+            user: action.payload.user,
+            token: action.payload.token
         };
     case SAVE_INTERESTS_SUCCESS:
         state.user.interests = action.user.interests;
@@ -72,8 +99,6 @@ export default (state = initialState, action) => {
         return { ...state, error: action.payload.error };
     case SAVE_INTERESTS_ERROR:
         return { ...state, error: action.error };
-    case CREATE_POST_LOADING:
-        return { ...state, loading: true, error: {} };
     case DELETE_SUCCESS:
         if (action.payload.item === 'posts') {
             state.user.boards = state.user.boards.map(board => {
@@ -92,7 +117,7 @@ export default (state = initialState, action) => {
     case DELETE_FAIL:
         return { ...state, error: action.payload.error };
     case CLEAR_ERROR:
-        return { ...state, error: initialState.error };
+        return { ...state, error: { message: '', status: '' } };
     default:
         return state;
     }

@@ -1,9 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import FormHelperText from '@material-ui/core/FormHelperText';
+import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
+import { TextField } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -24,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     },
     forgotPassword: {
         textAlign: 'center',
-        margin: '0.5rem 0',
+        marginTop: '10px',
         textDecoration: 'underline',
         fontSize: '13px',
         color: 'grey',
@@ -35,71 +34,84 @@ const useStyles = makeStyles(theme => ({
     },
     formControl: {
         marginBottom: theme.spacing(6),
-        display: 'block',
         minWidth: '22vw'
     },
-    input: {
+    textField: {
         width: '25vw'
     },
     button: {
         display: 'block',
-        margin: '4rem auto 0'
+        margin: '0 auto 0'
     }
 }));
 
 // eslint-disable-next-line react/prop-types
-const LoginForm = ({ handleChange, handleSignIn, email, password, disabled }) => {
+const LoginForm = ({
+    handleChange,
+    handleSignIn,
+    email,
+    password,
+    emailError,
+    passwordError,
+    loading
+}) => {
     const classes = useStyles();
-
-    const FormHelper = ({ input }) => {
-        if (input.error) {
-            return <FormHelperText id="error">{input.message}</FormHelperText>;
-        }
-        return null;
-    };
-
     return (
         <div className={classes.root}>
-            <form onSubmit={() => handleSignIn()} className="needs-validation" noValidate>
-                <FormControl className={classes.formControl} error={email.error}>
-                    <Input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Enter your email"
-                        value={email.value}
-                        onChange={e => handleChange(e)}
-                        classes={{ input: classes.input }}
-                        required
-                    />
-                    <FormHelper input={email} />
-                </FormControl>
-                <FormControl className={classes.formControl} error={password.error}>
-                    <Input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Password"
-                        value={password.value}
-                        onChange={e => handleChange(e)}
-                        classes={{ input: classes.input }}
-                        required
-                    />
-                    <FormHelper input={password} />
-                    <p className={classes.forgotPassword}>Forgot your password?</p>
-                </FormControl>
-                <div>
-                    <Button
-                        type="submit"
-                        color="primary"
-                        className={classes.button}
-                        href={''}
-                        disabled={!(!email.error && !password.error) || disabled}
-                    >
-                        Login
-                    </Button>
-                </div>
-            </form>
+            <DialogContent style={{ width: '300px' }}>
+                <TextField
+                    type="email"
+                    id="email"
+                    name="email"
+                    label="E-mail"
+                    value={email.value}
+                    onChange={e => handleChange(e)}
+                    helperText={emailError}
+                    FormHelperTextProps={{
+                        style: { float: 'left', position: 'absolute', bottom: -15, color: 'red' }
+                    }}
+                    style={{
+                        width: '100%',
+                        marginLeft: '5px',
+                        marginRight: '5px',
+                        marginBottom: '10px'
+                    }}
+                    required
+                />
+            </DialogContent>
+            <DialogContent style={{ width: '300px' }}>
+                <TextField
+                    type="password"
+                    id="password"
+                    name="password"
+                    label="Password"
+                    value={password.value}
+                    onChange={e => handleChange(e)}
+                    helperText={passwordError}
+                    FormHelperTextProps={{
+                        style: { float: 'left', position: 'absolute', bottom: -15, color: 'red' }
+                    }}
+                    style={{
+                        width: '100%',
+                        marginLeft: '5px',
+                        marginRight: '5px',
+                        marginBottom: '10px'
+                    }}
+                    required
+                />
+                <p className={classes.forgotPassword}>Forgot your password?</p>
+            </DialogContent>
+            <div>
+                <Button
+                    onClick={handleSignIn}
+                    color="primary"
+                    className={classes.button}
+                    href={''}
+                    disabled={loading}
+                >
+                    Login
+                </Button>
+            </div>
         </div>
     );
 };

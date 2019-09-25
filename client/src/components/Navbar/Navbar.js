@@ -42,7 +42,8 @@ const Navbar = ({ userStore: { authenticated, user }, logout, history, location,
 
     function handleLogOutClicked () {
         logout();
-        history.replace('/');
+        history.push('/');
+        window.location.reload();
     }
 
     function handleSearch (event) {
@@ -81,15 +82,18 @@ const Navbar = ({ userStore: { authenticated, user }, logout, history, location,
                     />
                     <div>
                         <h5>
-                            <Link to='/' style={{
-                                textDecoration: 'none'
-                            }}
-                            >
-                                <Button style={{
-                                    border: 'none',
-                                    padding: '0',
-                                    borderRadius: '7.5px'
+                            <Link
+                                to="/"
+                                style={{
+                                    textDecoration: 'none'
                                 }}
+                            >
+                                <Button
+                                    style={{
+                                        border: 'none',
+                                        padding: '0',
+                                        borderRadius: '7.5px'
+                                    }}
                                 >
                                     Home
                                 </Button>
@@ -101,12 +105,14 @@ const Navbar = ({ userStore: { authenticated, user }, logout, history, location,
                             to={authenticated ? `/profile/${user.username}` : '/login'}
                             style={{
                                 textDecoration: 'none'
-                            }}>
-                            <Button style={{
-                                border: 'none',
-                                padding: '0',
-                                borderRadius: '7.5px'
                             }}
+                        >
+                            <Button
+                                style={{
+                                    border: 'none',
+                                    padding: '0',
+                                    borderRadius: '7.5px'
+                                }}
                             >
                                 Profile
                             </Button>

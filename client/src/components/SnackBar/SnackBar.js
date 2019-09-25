@@ -60,7 +60,7 @@ function SnackBar ({ message, onClose, variant, open, duration = 4000 }) {
                 aria-describedby="snackbar"
                 message={
                     <span id="snackbar" className={classes.message}>
-                        <Icon className={classes.icon} />
+                        {/* <Icon className={classes.icon} /> */}
                         {message}
                     </span>
                 }
