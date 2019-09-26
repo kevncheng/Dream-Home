@@ -221,7 +221,7 @@ class Profile extends Component {
                     variant={'contained'}
                     onClick={() => this.onCreatePress('post')}
                     style={{
-                        margin: '10px'
+                        margin: '10px 25px 10px 10px'
                     }}
                 >
                     Create Post
@@ -284,6 +284,7 @@ class Profile extends Component {
                         <ProfilePic
                             profile={profileInfo.profile}
                             username={profileInfo.username}
+                            className = {this.isCurrentUser() ? 'profilePic' : '' }
                             isCurrentUser={this.isCurrentUser()}
                         />
                         <div>
@@ -426,7 +427,6 @@ class Profile extends Component {
                     <div className="activePanel">{this.renderFavorites()}</div>
                 </div>
                 {this.renderSnackBarError()}
-                {/* <SnackBar variant = 'success' message = 'hello' open ={this.state.SnackBar}/> */}
             </div>
         );
     }

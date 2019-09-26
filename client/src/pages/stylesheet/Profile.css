@@ -21,7 +21,7 @@
 }
 
 .profileName {
-    margin: 0;
+    margin-right: 1.5rem;
     padding: 0;
 }
 
@@ -141,4 +141,8 @@
     display: grid;
     height: 25vh;
     overflow: hidden;
+}
+
+.profilePic {
+    cursor: pointer;
 }

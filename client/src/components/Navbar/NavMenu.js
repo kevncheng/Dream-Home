@@ -10,7 +10,8 @@ const useStyles = makeStyles(theme => ({
     cornerIcon: {
         width: '50px',
         height: '50px',
-        borderRadius: '50px'
+        borderRadius: '50px',
+        cursor: 'pointer'
     },
     menu: {
         marginTop: '4rem'
@@ -36,30 +37,23 @@ const NavMenu = ({ authenticated, user, handleLogOutClicked, history }) => {
     if (authenticated) {
         return (
             <>
-                <Avatar
-                    className={classes.cornerIcon}
-                    src={user.profile}
-                    onClick={handleClick}
-                />
+                <Avatar className={classes.cornerIcon} src={user.profile} onClick={handleClick} />
                 <Menu
-                    id='simple-menu'
+                    id="simple-menu"
                     anchorEl={open}
                     keepMounted
                     open={Boolean(open)}
                     onClose={handleClose}
                     className={classes.menu}
                 >
-                    <MenuItem onClick = {() => onProfileClick()}>
-                        Profile
+                    <MenuItem onClick={() => onProfileClick()}>Profile</MenuItem>
+                    <MenuItem component={Link} to={`/profile/${user.username}/edit`}>
+                        Edit Profile Picture
                     </MenuItem>
                     <MenuItem component={Link} to={'/profile/' + user.username + '/interest-quiz'}>
                         Interest Quiz
                     </MenuItem>
-                    <MenuItem
-                        component={Link}
-                        to='/'
-                        onClick={handleLogOutClicked}
-                    >
+                    <MenuItem component={Link} to="/" onClick={handleLogOutClicked}>
                         Logout
                     </MenuItem>
                 </Menu>
@@ -68,13 +62,14 @@ const NavMenu = ({ authenticated, user, handleLogOutClicked, history }) => {
     } else {
         return (
             <>
-                <Link to='/login' style={{ textDecoration: 'none', color: 'black' }}>
+                <Link to="/login" style={{ textDecoration: 'none', color: 'black' }}>
                     <Button
                         style={{
                             border: 'none',
                             padding: '0',
                             borderRadius: '7.5px'
-                        }}>
+                        }}
+                    >
                         Log In
                     </Button>
                 </Link>

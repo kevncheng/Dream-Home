@@ -10,6 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { connect } from 'react-redux';
 import { editProfile } from '../../../actions/profileActions';
 import '../../../pages/stylesheet/Dialog.css';
+import { withRouter } from 'react-router-dom';
 
 class EditPicUserDialog extends Component {
     state = {
@@ -20,17 +21,17 @@ class EditPicUserDialog extends Component {
 
     componentDidMount = () => {
         const {
-            profileStore: { profileInfo }
+            userStore: { user }
         } = this.props;
         this.setState({
-            profile: profileInfo.profile,
-            name: profileInfo.name,
-            username: profileInfo.username
+            profile: user.profile,
+            name: user.name,
+            username: user.username
         });
     };
 
     renderLoading = () => {
-        if (!this.props.profileStore.profileInfo) {
+        if (this.props.profileStore.loading) {
             return <CircularProgress className="spinner" />;
         }
     };
@@ -142,7 +143,9 @@ const mapStateToProps = state => ({
     profileStore: state.ProfileStore
 });
 
-export default connect(
-    mapStateToProps,
-    { editProfile }
-)(EditPicUserDialog);
+export default withRouter(
+    connect(
+        mapStateToProps,
+        { editProfile }
+    )(EditPicUserDialog)
+);

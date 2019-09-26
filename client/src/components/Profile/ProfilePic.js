@@ -20,6 +20,7 @@ class ProfilePic extends React.Component {
                         className="subHeaderIcon"
                         src={profile}
                         onClick={() => this.onClickAvatar()}
+                        style={isCurrentUser ? { cursor: 'pointer' } : {}}
                     />
                 </Tooltip>
             </div>
