@@ -3,11 +3,10 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { DialogTitle } from '../components';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Avatar from '@material-ui/core/Avatar';
-import CloseIcon from '@material-ui/icons/Close';
 import { connect } from 'react-redux';
 import { editProfile } from '../../../actions/profileActions';
 import '../../../pages/stylesheet/Dialog.css';
@@ -88,17 +87,15 @@ class EditPicUserDialog extends Component {
                 open={true}
                 maxWidth="xs"
                 fullWidth
-                onClose={this.handleClose}
                 aria-labelledby="form-dialog-title"
                 onClick={() => this.onCloseClicked()}
             >
                 <div onClick={e => e.stopPropagation()}>
-                    <CloseIcon
-                        className="closeButton"
-                        fontSize="small"
-                        onClick={() => this.onCloseClicked()}
-                    />
-                    <DialogTitle style={{ textAlign: 'center' }} id="form-dialog-title">
+                    <DialogTitle
+                        style={{ textAlign: 'center' }}
+                        id="form-dialog-title"
+                        onClose={this.onCloseClicked}
+                    >
                         Edit avatar/username
                     </DialogTitle>
                     <DialogContent className="DialogContent">

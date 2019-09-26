@@ -166,7 +166,7 @@ class Profile extends Component {
             userStore: { user }
         } = this.props;
         return posts.length === 0 ? (
-            <h2>There are no posts</h2>
+            <h2 style={{ textAlign: 'center' }}>There are no posts</h2>
         ) : (
             <div style={{ width: '100vw' }}>
                 <Posts posts={posts} deleteAuth={true} user={user._id} />

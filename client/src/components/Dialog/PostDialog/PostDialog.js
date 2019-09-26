@@ -10,13 +10,13 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+// import DialogTitle from '@material-ui/core/DialogTitle';
+import { DialogTitle } from '../components';
 import FormContent from './FormContent';
 import SnackBar from '../../SnackBar/SnackBar';
 import FileUploader from './FileUploader';
 import BoardList from './BoardList';
 import { Chip } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
 
 import '../../../pages/stylesheet/Dialog.css';
 
@@ -183,7 +183,6 @@ class PostDialog extends React.Component {
                 return <Redirect to={redirect} />;
             }
         }
-        console.log(this.state.image);
         return (
             <Dialog
                 open={true}
@@ -192,12 +191,11 @@ class PostDialog extends React.Component {
                 onClick={() => this.onCloseClick()}
             >
                 <div onClick={e => e.stopPropagation()}>
-                    <CloseIcon
-                        className="closeButton"
-                        fontSize="small"
-                        onClick={() => this.onCloseClick()}
-                    />
-                    <DialogTitle style={{ textAlign: 'center' }} id="form-dialog-title">
+                    <DialogTitle
+                        style={{ textAlign: 'center' }}
+                        id="form-dialog-title"
+                        onClose={this.onCloseClick}
+                    >
                         Create a post
                     </DialogTitle>
                     <div className="container">

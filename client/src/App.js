@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { MuiThemeProvider } from '@material-ui/core';
-import { BrowserRouter, Route, Switch, withRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { theme } from './themes/theme';
 import './App.css';
@@ -34,7 +34,7 @@ class App extends Component {
                     <NavBar />
                     <div>
                         <Switch>
-                            <Route exact path='/' component={withRouter(Main)} />
+                            <Route exact path='/' component={Main} />
                             <Route exact path='/login' component={Login} />
                             <Route path='/posts/:id' component={PostPage} />
                             <Route

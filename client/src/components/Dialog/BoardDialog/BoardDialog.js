@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { DialogTitle } from '../components';
 import TextField from '@material-ui/core/TextField';
 import { addBoard } from '../../../actions/profileActions';
 import { Redirect } from 'react-router-dom';
@@ -59,29 +59,32 @@ class BoardDialog extends Component {
         } = this.props;
         if (userStore.authenticated) {
             if (userStore.user.username !== params.username) {
-                const redirect = `/profile/${params.username}`;
-                return <Redirect to={redirect} />;
+                return <Redirect to={`/profile/${params.username}`} />;
             }
         }
         return (
             <Dialog
-                open={true}
+                open
+                fullWidth
                 onClick={() => this.onCloseClick()}
-                aria-labelledby='board-dialog'
-                maxWidth='xs'
-                fullWidth={true}
+                aria-labelledby="board-dialog"
+                maxWidth="xs"
             >
                 <div onClick={e => e.stopPropagation()}>
-                    <DialogTitle style={{ textAlign: 'center' }} id='dialog-title'>
+                    <DialogTitle
+                        style={{ textAlign: 'center' }}
+                        id="dialog-title"
+                        onClose={this.onCloseClick}
+                    >
                         Create a board
                     </DialogTitle>
                     <DialogContent>
                         <TextField
                             autoFocus
-                            margin='dense'
-                            id='name'
-                            type='name'
-                            label='Name'
+                            margin="dense"
+                            id="name"
+                            type="name"
+                            label="Name"
                             fullWidth
                             onChange={e => this.onChangeText(e)}
                             value={this.state.title}
@@ -92,7 +95,7 @@ class BoardDialog extends Component {
                     <DialogActions>
                         <Button
                             onClick={this.onCreatePress}
-                            color='primary'
+                            color="primary"
                             className={classes.button}
                         >
                             Create
