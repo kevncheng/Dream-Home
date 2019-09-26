@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { signUp, login, clearError } from '../actions/userActions';
 import SignUpForm from '../components/Dialog/SignUp/SignUpForm';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-// import DialogTitle from '@material-ui/core/DialogTitle';
 import './stylesheet/SignUp.css';
-import CloseIcon from '@material-ui/icons/Close';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import SnackBar from '../components/SnackBar/SnackBar';
 import { DialogTitle } from '../components/Dialog/components';
@@ -113,7 +111,7 @@ const useStyles = makeStyles({
 });
 
 // eslint-disable-next-line react/prop-types
-const SignUp = ({ history, signUp, login, clearError, userStore: { loading, error } }) => {
+const SignUp = ({ history, signUp, login, clearError, userStore: { loading, error, authenticated, user } }) => {
     const style = useStyles();
     const [formData, setFormData] = useState({
         name: '',
@@ -188,11 +186,9 @@ const SignUp = ({ history, signUp, login, clearError, userStore: { loading, erro
         history.push('/');
     };
 
-    if (error.status === 'success') {
-        login({ email, password });
-        history.push('/');
+    if (authenticated) {
+        return <Redirect to={`/profile/${user.username}`} />;
     }
-
     return (
         <Dialog open aria-labelledby="form-dialog-title" onClick={() => onCloseClick()}>
             <div style={{ visibility: loading ? 'visible' : 'hidden' }}>

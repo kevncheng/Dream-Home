@@ -68,15 +68,24 @@ export default (state = initialState, action) => {
         localStorage.removeItem('token');
         return { ...state, token: null, authenticated: false, loading: false };
     case SIGN_UP_FAIL:
-        return { ...state, loading: false, error: action.payload };
-    case SIGN_UP_SUCCESS:
         return {
             ...state,
             loading: false,
-            user: action.payload.user,
-            token: action.payload.token,
-            error: { message: 'Registration Success!', status: 'success' }
+            error: {
+                message:
+                        'Something went wrong with the registration, please try a new username or email.',
+                status: 'error'
+            }
         };
+        // case SIGN_UP_SUCCESS:
+        //     return {
+        //         ...state,
+        //         loading: false,
+        //         user: action.payload.user,
+        //         token: action.payload.token,
+        //         error: { message: 'Registration Success!', status: 'success' }
+        //     };
+    case SIGN_UP_SUCCESS:
     case SIGN_IN_SUCCESS:
         localStorage.setItem('token', action.payload.token);
         localStorage.setItem('user', JSON.stringify(action.payload.user));
@@ -94,6 +103,8 @@ export default (state = initialState, action) => {
     case GET_TOKEN_SUCCESS:
         return { ...state, authenticated: true, user: action.user, token: action.token };
     case EDIT_PROFILE_SUCCESS:
+        const updateUser = { ...state.user, ...action.payload.user };
+        localStorage.setItem('user', JSON.stringify(updateUser));
         return { ...state, user: { ...state.user, ...action.payload.user } };
     case EDIT_PROFILE_FAIL:
         return { ...state, error: action.payload.error };

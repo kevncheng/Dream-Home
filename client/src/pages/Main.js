@@ -50,7 +50,7 @@ class Search extends Component {
         if (this.props.posts.loading) {
             return <CircularProgress className = 'spinner'/>;
         };
-        console.log(this.props.user)
+        // console.log(this.props.user)
         return (
             <div>
                 <div className='placeholder' />

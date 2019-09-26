@@ -61,19 +61,14 @@ export const signUp = body => async dispatch => {
         dispatch({
             type: AUTHORIZING
         });
-        await axios.post('/users/register', body, config);
+        const res = await axios.post('/users/register', body, config);
         dispatch({
             type: SIGN_UP_SUCCESS,
-            payload: { message: 'Registration success!', status: 'success' }
+            payload: res.data
         });
     } catch (err) {
         dispatch({
-            type: SIGN_UP_FAIL,
-            payload: {
-                message:
-                    'Something went wrong with the registration, please try a new username or email.',
-                status: 'error'
-            }
+            type: SIGN_UP_FAIL
         });
     }
 };
