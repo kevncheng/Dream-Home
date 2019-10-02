@@ -111,7 +111,12 @@ const useStyles = makeStyles({
 });
 
 // eslint-disable-next-line react/prop-types
-const SignUp = ({ history, signUp, login, clearError, userStore: { loading, error, authenticated, user } }) => {
+const SignUp = ({
+    history,
+    signUp,
+    clearError,
+    userStore: { loading, error, authenticated, user }
+}) => {
     const style = useStyles();
     const [formData, setFormData] = useState({
         name: '',

@@ -69,10 +69,10 @@ export default (state = INITIAL_STATE, action) => {
             ...state,
             profileInfo: {
                 ...state.profileInfo,
-                posts: [...state.profileInfo.posts, response.post]
+                posts: [...state.profileInfo.posts, action.payload.post]
             },
             loading: false,
-            error: response.error
+            error: action.payload.error
         };
     case ADD_POST_ERROR:
         return { ...state, error: action.err, loading: false };

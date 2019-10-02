@@ -1,21 +1,21 @@
 import React from 'react';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
+// import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+// import ErrorIcon from '@material-ui/icons/Error';
+// import InfoIcon from '@material-ui/icons/Info';
+// import WarningIcon from '@material-ui/icons/Warning';
 import CloseIcon from '@material-ui/icons/Close';
 import { amber, green } from '@material-ui/core/colors';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
-import WarningIcon from '@material-ui/icons/Warning';
 import { makeStyles } from '@material-ui/core/styles';
 
-const variantIcon = {
-    success: CheckCircleIcon,
-    warning: WarningIcon,
-    error: ErrorIcon,
-    info: InfoIcon
-};
+// const variantIcon = {
+//     success: CheckCircleIcon,
+//     warning: WarningIcon,
+//     error: ErrorIcon,
+//     info: InfoIcon
+// };
 
 const useStyles1 = makeStyles(theme => ({
     success: {
@@ -43,7 +43,7 @@ const useStyles1 = makeStyles(theme => ({
 
 function SnackBar ({ message, onClose, variant, open, duration = 4000 }) {
     const classes = useStyles1();
-    const Icon = variantIcon[variant];
+    // const Icon = variantIcon[variant];
 
     return (
         <Snackbar
@@ -60,7 +60,6 @@ function SnackBar ({ message, onClose, variant, open, duration = 4000 }) {
                 aria-describedby="snackbar"
                 message={
                     <span id="snackbar" className={classes.message}>
-                        {/* <Icon className={classes.icon} /> */}
                         {message}
                     </span>
                 }

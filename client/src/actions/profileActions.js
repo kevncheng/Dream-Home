@@ -147,9 +147,12 @@ export const createPost = (formData, username, board) => async dispatch => {
         }
         dispatch({
             type: ADD_POST_SUCCESS,
-            response: {
-                post: res.data,
-                error: { message: 'Succesfully created a post', status: 'success' }
+            payload: {
+                post: res.data.post,
+                error: {
+                    message: 'Succesfully created a post',
+                    status: 'success'
+                }
             }
         });
     } catch (err) {

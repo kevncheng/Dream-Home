@@ -77,14 +77,6 @@ export default (state = initialState, action) => {
                 status: 'error'
             }
         };
-        // case SIGN_UP_SUCCESS:
-        //     return {
-        //         ...state,
-        //         loading: false,
-        //         user: action.payload.user,
-        //         token: action.payload.token,
-        //         error: { message: 'Registration Success!', status: 'success' }
-        //     };
     case SIGN_UP_SUCCESS:
     case SIGN_IN_SUCCESS:
         localStorage.setItem('token', action.payload.token);
