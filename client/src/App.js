@@ -34,18 +34,23 @@ class App extends Component {
                     <NavBar />
                     <div>
                         <Switch>
-                            <Route exact path='/' component={Main} />
-                            <Route exact path='/login' component={Login} />
-                            <Route path='/posts/:id' component={PostPage} />
                             <Route
-                                path='/profile/:username'
+                                path="/"
+                                render={props => (
+                                    <Main key={props.location.key} {...props} />
+                                )}
+                            />
+                            <Route exact path="/login" component={Login} />
+                            <Route path="/posts/:id" component={PostPage} />
+                            <Route
+                                path="/profile/:username"
                                 render={props => (
                                     <Profile key={props.match.params.username} {...props} />
                                 )}
                             />
-                            <Route exact path='/signup' component={SignUp} />
-                            <Route path='/board/:id' component={PostInBoards}/>
-                            <Route path='/profile/:username/following' component={FollowersPage}/>
+                            <Route exact path="/signup" component={SignUp} />
+                            <Route path="/board/:id" component={PostInBoards} />
+                            <Route path="/profile/:username/following" component={FollowersPage} />
                         </Switch>
                     </div>
                 </BrowserRouter>
