@@ -2,7 +2,8 @@ import { FETCH_POSTS_SUCCESS, FETCH_POSTS_FAIL, FETCHING_POSTS } from '../action
 
 const INITIAL_STATE = {
     posts: [],
-    loading: false
+    loading: false,
+    postsSize: 0
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -11,7 +12,7 @@ export default (state = INITIAL_STATE, action) => {
     case FETCHING_POSTS:
         return { ...state, loading: true };
     case FETCH_POSTS_SUCCESS:
-        return { ...state, loading: false, posts: payload };
+        return { ...state, loading: false, posts: payload.posts, postsSize: payload.postsSize };
     case FETCH_POSTS_FAIL:
         return { ...state, loading: false };
     default:
