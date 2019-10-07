@@ -8,7 +8,7 @@ import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { getBoardsandPosts } from '../../actions/profileActions';
 import { boardService } from '../../services/board';
-import { fetchPosts } from '../../actions/post';
+import { fetchPosts } from '../../actions/postActions';
 
 const styles = theme => ({
     post: {

@@ -7,7 +7,7 @@ import queryString from 'query-string';
 import { logout } from '../../actions/userActions';
 import NavMenu from './NavMenu';
 import NavSearch from './NavSearch';
-import { searchPosts } from '../../actions/post';
+import { searchPosts } from '../../actions/postActions';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
