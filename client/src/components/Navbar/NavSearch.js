@@ -39,7 +39,8 @@ const useStyles = makeStyles(theme => ({
         cursor: 'pointer'
     },
     searchingIcon: {
-        color: '#147EFB'
+        color: '#147EFB',
+        cursor: 'pointer'
     }
 }));
 

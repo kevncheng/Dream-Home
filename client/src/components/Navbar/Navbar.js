@@ -27,12 +27,14 @@ const useStyles = makeStyles(theme => ({
         background: 'white',
         zIndex: '10'
     },
+    title: {
+        display: 'flex',
+        flexdirection: 'row',
+        cursor: 'pointer'
+    },
     placeholderHeader: {
         minHeight: '16vh',
         height: '16vh'
-    },
-    clear: {
-        cursor: 'pointer'
     }
 }));
 
@@ -48,14 +50,7 @@ const Navbar = ({ userStore: { authenticated, user }, logout, history, location,
 
     function handleSearch (event) {
         event.preventDefault();
-        // eslint-disable-next-line camelcase
-        const { easy_filters = '' } = queryString.parse(location.search);
-        if (authenticated) {
-            searchPosts(search, easy_filters, user._id);
-        } else {
-            searchPosts(search, easy_filters, '');
-        }
-        history.push('/');
+        history.push(`?search_filter=${search}`);
     }
 
     function handleSearchChange (event) {
@@ -70,8 +65,17 @@ const Navbar = ({ userStore: { authenticated, user }, logout, history, location,
         <div>
             <div className={classes.headerContainer}>
                 <div className={classes.header}>
-                    <div>
-                        <h3>Dream Home</h3>
+                    <div className={classes.title} onClick={() => history.push('/')}>
+                        <div>
+                            <img
+                                style={{ width: '3em', margin: '7px' }}
+                                src={require('../../assets/DreamHome.png')}
+                                alt={'logo'}
+                            />
+                        </div>
+                        <div>
+                            <h3>Dream Home</h3>
+                        </div>
                     </div>
                     <div />
                     <NavSearch

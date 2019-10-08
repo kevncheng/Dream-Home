@@ -35,6 +35,7 @@ class App extends Component {
                     <div>
                         <Switch>
                             <Route
+                                exact
                                 path="/"
                                 render={props => (
                                     <Main key={props.location.key} {...props} />
