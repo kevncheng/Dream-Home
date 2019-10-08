@@ -23,7 +23,8 @@ const initialState = {
     authenticated: false,
     loading: false,
     error: { message: '', status: '' },
-    token: localStorage.getItem('token')
+    token: localStorage.getItem('token'),
+    user: { _id: null }
 };
 
 export default (state = initialState, action) => {

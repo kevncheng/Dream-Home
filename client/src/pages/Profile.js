@@ -169,7 +169,7 @@ class Profile extends Component {
             <h2 style={{ textAlign: 'center' }}>There are no posts</h2>
         ) : (
             <div style={{ width: '100vw' }}>
-                <Posts posts={posts} deleteAuth={true} user={user._id} />
+                <Posts posts={posts} deleteAuth={true} user={user._id}/>
             </div>
         );
     };
@@ -284,7 +284,7 @@ class Profile extends Component {
                         <ProfilePic
                             profile={profileInfo.profile}
                             username={profileInfo.username}
-                            className = {this.isCurrentUser() ? 'profilePic' : '' }
+                            className={this.isCurrentUser() ? 'profilePic' : ''}
                             isCurrentUser={this.isCurrentUser()}
                         />
                         <div>
