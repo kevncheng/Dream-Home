@@ -144,7 +144,6 @@ class PostDialog extends React.Component {
         if (description.length < 3 || description.length > 200) {
             this.setState({ descriptionError: 'Must be atleast 3 to 200 characters' });
         } else if (image.length > 0 && !titleError && !linkError && !descriptionError) {
-            console.log(image);
             const formData = createFormData({ title, link, description, image: image[0], tags });
             // image.forEach(file => formData.append('image', file));
             this.props.createPost(formData, username, board);
