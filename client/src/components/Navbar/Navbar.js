@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import { makeStyles } from '@material-ui/styles';
 import { Link, withRouter } from 'react-router-dom';
-import queryString from 'query-string';
 import { logout } from '../../actions/userActions';
 import NavMenu from './NavMenu';
 import NavSearch from './NavSearch';
@@ -50,7 +49,7 @@ const Navbar = ({ userStore: { authenticated, user }, logout, history, location,
 
     function handleSearch (event) {
         event.preventDefault();
-        history.push(`?search_filter=${search}`);
+        history.push(`/?search_filter=${search}`);
     }
 
     function handleSearchChange (event) {
