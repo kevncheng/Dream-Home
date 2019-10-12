@@ -20,7 +20,9 @@ import {
     EDIT_PROFILE_FAIL,
     CLEAR_ERROR,
     DELETE_FAIL,
-    DELETE_SUCCESS
+    DELETE_SUCCESS,
+    CURRENT_USER_CHECK,
+    FAVOURITE_POST
 } from '../actions/types';
 import axios from 'axios';
 import _ from 'lodash';
@@ -42,12 +44,17 @@ export const addPost = (post, username) => ({
     username
 });
 
-export const fetchProfileInfo = username => async dispatch => {
+export const fetchProfileInfo = (username, currentUser) => async dispatch => {
     try {
+        const isCurrentUser = username === currentUser;
         dispatch({
             type: FETCHING_PROFILE
         });
-        const res = await axios.get(`/users/${username}`);
+        dispatch({
+            type: CURRENT_USER_CHECK,
+            payload: isCurrentUser
+        });
+        const res = await axios.get(`/users/${username}?isCurrentUser=${isCurrentUser}`);
         const profileInfo = res.data.user;
         dispatch({
             type: FETCH_PROFILE_SUCCESS,
@@ -187,9 +194,13 @@ export const clearError = () => ({
     type: CLEAR_ERROR
 });
 
-export const favouritePost = (username, post) => async dispatch => {
+export const favouritePost = (username, post, isFavourited) => async dispatch => {
     try {
-        await axios.post(`/users/${username}/favourite`, { post });
+        const res = await axios.post(`/users/${username}/${isFavourited}`, { post });
+        dispatch({
+            type: FAVOURITE_POST,
+            payload: res.data.user
+        });
     } catch (err) {
         console.log('Something went wrong with favouriting this post');
     }
@@ -224,3 +235,8 @@ export const deleteItem = (item, id) => async dispatch => {
         });
     }
 };
+
+export const isCurrentUser = bool => ({
+    type: CURRENT_USER_CHECK,
+    payload: bool
+});

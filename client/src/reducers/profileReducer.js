@@ -21,13 +21,15 @@ import {
     CREATE_POST_LOADING,
     CLEAR_ERROR,
     DELETE_FAIL,
-    DELETE_SUCCESS
+    DELETE_SUCCESS,
+    CURRENT_USER_CHECK
 } from '../actions/types';
 import _ from 'lodash';
 
 const INITIAL_STATE = {
     loading: false,
-    error: {}
+    error: {},
+    isCurrentUser: null
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -132,6 +134,8 @@ export default (state = INITIAL_STATE, action) => {
         return { ...state, error: action.payload.error };
     case CLEAR_ERROR:
         return { ...state, error: {} };
+    case CURRENT_USER_CHECK:
+        return { ...state, isCurrentUser: action.payload, loading: true };
     default:
         return state;
     }
