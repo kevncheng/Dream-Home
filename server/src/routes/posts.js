@@ -13,7 +13,7 @@ const _ = require('lodash');
 router.get('/', [
     pub,
     async (req, res) => {
-        const {search_filter = '', easy_filters = '', userId = '', size = 20} = req.query;
+        const {search_filter = '', easy_filters = '',size = 20} = req.query;
         try {
             let query;
             let searchTags = [];
@@ -24,14 +24,7 @@ router.get('/', [
             if (easy_filters) {
                 searchTags = [...searchTags, ...easy_filters.split(',')];
             }
-            // If logged in with empty search
-            if (_.isEmpty(searchTags) && userId) {
-                // Get user's interest and add interest into search tags
-                const user = await User.findById(mongoose.Types.ObjectId(userId));
-                searchTags = [...searchTags, ...user.interests];
-                query = {tags: {$in: user.interests}};
-            }
-            // Search by filters if present
+            // // Search by filters if present
             else if (!_.isEmpty(searchTags)) {
                 query = {tags: {$all: searchTags}};
                 // If not logged in will return a bunch of posts
@@ -43,7 +36,7 @@ router.get('/', [
                 .sort({$natural: -1})
                 .populate({path: 'user', select: 'username name profile'})
                 .lean();
-            const postsSize = await Post.find(query).count();
+            const postsSize = await Post.find(query).countDocuments();
             res.send({posts, postsSize});
         } catch (err) {
             res.status(500).send('Something went wrong with the server');
