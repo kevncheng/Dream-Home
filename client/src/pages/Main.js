@@ -22,12 +22,10 @@ class Search extends Component {
     componentDidMount = () => {
         const {
             location,
-            fetchPosts,
-            user: { user }
+            fetchPosts
         } = this.props;
         const query = queryString.parse(location.search);
         const { search_filter = '', easy_filters = '', size = 20 } = query;
-        // const { _id = '' } = user;
         fetchPosts(search_filter, easy_filters, '', size);
     };
 
