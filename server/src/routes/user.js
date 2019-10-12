@@ -13,7 +13,6 @@ router.get('/', [
             const user = await User.findById(req.decoded._id).select('-password');
             res.json(user);
         } catch (err) {
-            console.error(err.message);
             res.status(500).send('Server Error');
         }
     }
@@ -45,7 +44,6 @@ router.post('/login', [
     UserValidation.login,
     pub,
     async (req, res) => {
-
         const user = await User.findOne({email: req.body.email})
             .populate({path: 'posts', populate: {path: 'user', select: 'username name profile'}})
             // .populate({ path: 'favourites', populate: { path: 'user', select: 'username name profile' } })
@@ -78,20 +76,27 @@ router.get('/:username', [
     pub,
     async (req, res) => {
         try {
-            const user = await User.findOne({username: req.params.username})
-                .select('-password')
-                .populate({
+            const currentUser = req.query.isCurrentUser === 'true';
+            let populateQuery = [
+                {
                     path: 'posts',
                     populate: {path: 'user', select: 'username name profile'}
-                })
-                .populate({
-                    path: 'favourites',
-                    populate: {path: 'user', select: 'username name profile'}
-                })
-                .populate({
+                },
+                {
                     path: 'boards',
                     populate: {path: 'posts', select: '_id image'}
-                })
+                }
+            ];
+            if (currentUser) {
+                populateQuery.push({
+                    path: 'favourites',
+                    populate: {path: 'user', select: 'username name profile'}
+                });
+            }
+            const selectQuery = currentUser ? '-password' : '-password -favourites';
+            const user = await User.findOne({username: req.params.username})
+                .select(selectQuery)
+                .populate(populateQuery)
                 .exec();
             if (!user) {
                 return res.status(404).json({success: false, message: 'User not found'});
@@ -277,12 +282,14 @@ router.post('/:username/favourite', [
         try {
             const user = await User.findByIdAndUpdate(req.decoded._id, {
                 $addToSet: {favourites: req.body.post}
-            }).lean();
+            })
+                .select('-password')
+                .lean();
             if (!user) {
                 return res.status(404).json({success: false, message: 'User not found'});
             }
 
-            res.status(201).json({success: true});
+            res.status(201).json({success: true, user});
         } catch (err) {
             return res.status(400).json({success: false, err});
         }
@@ -297,13 +304,15 @@ router.post('/:username/unfavourite', [
     async (req, res) => {
         try {
             const user = await User.findByIdAndUpdate(req.decoded._id, {
-                pull: {favourites: req.body.post}
-            }).lean();
+                $pullAll: {favourites: [req.body.post]}
+            })
+                .select('-password')
+                .lean();
             if (!user) {
                 return res.status(404).json({success: false, message: 'User not found'});
             }
 
-            res.status(200).json({success: true});
+            res.status(200).json({success: true, user});
         } catch (err) {
             return res.status(400).json({success: false, err});
         }
