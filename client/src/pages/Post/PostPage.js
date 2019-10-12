@@ -43,11 +43,10 @@ class PostPage extends React.Component {
     save = async e => {
         e.preventDefault();
         try {
-            const response = await boardService.addPost({
+            await boardService.addPost({
                 post: this.state.id,
                 board: this.state.board
             });
-            console.log(response);
         } catch (err) {
             console.log(err.response);
         }
@@ -61,7 +60,6 @@ class PostPage extends React.Component {
             morePosts,
             match
         } = this.props;
-
         if (!post(match.params.id)) {
             return (
                 <div>
@@ -96,6 +94,7 @@ class PostPage extends React.Component {
                         post={post(match.params.id)}
                         boards={authenticated ? user.boards : []}
                         authenticated={authenticated}
+                        favourites = {user.favourites}
                     />
                 </div>
                 <Divider component={'hr'} />

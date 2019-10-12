@@ -16,7 +16,8 @@ import {
     DELETE_SUCCESS,
     DELETE_FAIL,
     SIGN_IN_SUCCESS,
-    SIGN_IN_FAIL
+    SIGN_IN_FAIL,
+    FAVOURITE_POST
 } from '../actions/types';
 
 const initialState = {
@@ -24,7 +25,7 @@ const initialState = {
     loading: false,
     error: { message: '', status: '' },
     token: localStorage.getItem('token'),
-    user: { _id: null }
+    user: { _id: null, favourites: [] }
 };
 
 export default (state = initialState, action) => {
@@ -118,6 +119,13 @@ export default (state = initialState, action) => {
             loading: false,
             error: action.payload.error
         };
+    case FAVOURITE_POST:
+        const updateFavourites = {
+            ...state.user,
+            favourites: action.payload.favourites
+        };
+        localStorage.setItem('user', JSON.stringify(updateFavourites));
+        return { ...state, user: { ...state.user, favourites: action.payload.favourites } };
     case DELETE_FAIL:
         return { ...state, error: action.payload.error };
     case CLEAR_ERROR:

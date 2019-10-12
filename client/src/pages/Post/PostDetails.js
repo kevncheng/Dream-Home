@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Typography, Grid } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import face from '../../assets/face.jpg';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import moment from 'moment';
 
 import { withRouter } from 'react-router-dom';
@@ -36,9 +36,9 @@ const PostDetails = ({ post, history, favouritePost, authenticated, match }) => 
     const classes = useStyles();
     const placeholder = 'https://team-pineapple.s3.ca-central-1.amazonaws.com/placeholder.jpg';
 
-    const onFavouritePress = () => {
-        favouritePost(post.user.username, match.params.id);
-    };
+    // const onFavouritePress = () => {
+    //     favouritePost(post.user.username, match.params.id);
+    // };
 
     return (
         <div>
@@ -61,19 +61,17 @@ const PostDetails = ({ post, history, favouritePost, authenticated, match }) => 
                 <Typography className={classes.user}>{post.user.name}</Typography>
             </Grid>
             <Grid className={classes.content}>
-                <Typography
-                    variant="h5"
-                    component="h5"
-                    className={classes.title}>
+                <Typography variant="h5" component="h5" className={classes.title}>
                     {post.title}
                 </Typography>
                 <Typography className={classes.text}>{post.description}</Typography>
                 <p className={classes.date}>{moment(post.date).format('MMMM Do YYYY, h:mm a')}</p>
-                {
+
+                {/* {
                     authenticated
                         ? <Button className={classes.favorite} onClick={() => onFavouritePress()}>Favorite This Post!</Button>
                         : null
-                }
+                } */}
             </Grid>
         </div>
     );

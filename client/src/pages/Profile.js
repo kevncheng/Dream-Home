@@ -23,7 +23,6 @@ import {
 import Posts from '../components/Posts/Posts';
 import _ from 'lodash';
 import './stylesheet/Profile.css';
-import Masonry from 'react-masonry-component';
 import ProfilePic from '../components/Profile/ProfilePic';
 
 class Profile extends Component {
@@ -34,9 +33,14 @@ class Profile extends Component {
     };
 
     componentDidMount () {
-        const username = this.props.match.params.username;
+        const {
+            fetchProfileInfo,
+            userStore: { user },
+            match: { params }
+        } = this.props;
+        const username = params.username;
         this.setState({ username: username });
-        this.props.fetchProfileInfo(username);
+        fetchProfileInfo(username, user.username);
     }
 
     toggleTabs = item => {
@@ -169,26 +173,24 @@ class Profile extends Component {
             <h2 style={{ textAlign: 'center' }}>There are no posts</h2>
         ) : (
             <div style={{ width: '100vw' }}>
-                <Posts posts={posts} deleteAuth={true} user={user._id}/>
+                <Posts posts={posts} deleteAuth={true} user={user._id} />
             </div>
         );
     };
 
-    renderFavorites = () => {
-        const favoritePosts = [];
-        const favorites = favoritePosts.map(function (el) {
-            return <img className="favoritePost" alt="" src={el} key={el} />;
-        });
-        return favoritePosts.length === 0 ? (
-            <h2>You have no favorite posts</h2>
+    renderFavourites = () => {
+        const {
+            profileStore: {
+                profileInfo: { favourites }
+            },
+            userStore: { user }
+        } = this.props;
+        return favourites.length === 0 ? (
+            <h2 style={{ textAlign: 'center' }}>There are no favourites</h2>
         ) : (
-            <Masonry
-                className="masonry"
-                elementType={'div'}
-                options={{ fitWidth: true, gutter: 15 }}
-            >
-                {favorites}
-            </Masonry>
+            <div style={{ width: '100vw' }}>
+                <Posts posts={favourites} deleteAuth={false} user={user._id} />
+            </div>
         );
     };
 
@@ -250,26 +252,14 @@ class Profile extends Component {
         }
     };
 
-    isCurrentUser = () => {
-        const {
-            profileStore: { profileInfo },
-            userStore
-        } = this.props;
-        if (!userStore.authenticated) {
-            return false;
-        } else if (userStore.user._id === profileInfo._id) {
-            return true;
-        }
-        return false;
-    };
-
     render () {
         const {
-            profileStore: { profileInfo, loading }
+            profileStore: { profileInfo, loading, isCurrentUser }
         } = this.props;
         if (_.isUndefined(profileInfo) || loading) {
             return <CircularProgress className="spinner" />;
         }
+        console.log(profileInfo);
         return (
             <div>
                 <Route path="/profile/:username/edit" component={EditPicUserDialog} />
@@ -284,8 +274,8 @@ class Profile extends Component {
                         <ProfilePic
                             profile={profileInfo.profile}
                             username={profileInfo.username}
-                            className={this.isCurrentUser() ? 'profilePic' : ''}
-                            isCurrentUser={this.isCurrentUser()}
+                            className={isCurrentUser ? 'profilePic' : ''}
+                            isCurrentUser={isCurrentUser}
                         />
                         <div>
                             <h3 className="profileName">{profileInfo.name}</h3>
@@ -321,12 +311,12 @@ class Profile extends Component {
                             </Button>
                             <Button
                                 color="primary"
-                                onClick={() => this.toggleTabs('favorite')}
+                                onClick={() => this.toggleTabs('favourite')}
                                 style={{
                                     margin: '10px'
                                 }}
                             >
-                                Favorites
+                                Favourites
                             </Button>
                         </div>
                         <div />
@@ -364,12 +354,12 @@ class Profile extends Component {
                             </Button>
                             <Button
                                 color="primary"
-                                onClick={() => this.toggleTabs('favorite')}
+                                onClick={() => this.toggleTabs('favourite')}
                                 style={{
                                     margin: '10px'
                                 }}
                             >
-                                Favorites
+                                Favourites
                             </Button>
                         </div>
                         <div />
@@ -390,7 +380,7 @@ class Profile extends Component {
                         </div>
                     </div>
                 </div>
-                <div style={{ display: this.state.activePanel === 'favorite' ? 'grid' : 'none' }}>
+                <div style={{ display: this.state.activePanel === 'favourite' ? 'grid' : 'none' }}>
                     <div className="tabSection">
                         <div>
                             <Button
@@ -419,12 +409,12 @@ class Profile extends Component {
                                     margin: '10px'
                                 }}
                             >
-                                Favorites
+                                Favourites
                             </Button>
                         </div>
                         <div />
                     </div>
-                    <div className="activePanel">{this.renderFavorites()}</div>
+                    <div className="activePanel">{this.renderFavourites()}</div>
                 </div>
                 {this.renderSnackBarError()}
             </div>
