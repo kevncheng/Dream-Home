@@ -50,9 +50,6 @@ const NavMenu = ({ authenticated, user, handleLogOutClicked, history }) => {
                     <MenuItem component={Link} to={`/profile/${user.username}/edit`}>
                         Edit Profile Picture
                     </MenuItem>
-                    <MenuItem component={Link} to={'/profile/' + user.username + '/interest-quiz'}>
-                        Interest Quiz
-                    </MenuItem>
                     <MenuItem component={Link} to="/" onClick={handleLogOutClicked}>
                         Logout
                     </MenuItem>
