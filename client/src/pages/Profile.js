@@ -276,7 +276,6 @@ class Profile extends Component {
         if (_.isUndefined(profileInfo) || loading) {
             return <CircularProgress className="spinner" />;
         }
-        console.log(isCurrentUser);
         return (
             <div>
                 <Route path="/profile/:username/edit" component={EditPicUserDialog} />
