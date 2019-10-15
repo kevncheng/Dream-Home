@@ -13,13 +13,7 @@ import BoardDialog from '../components/Dialog/BoardDialog/BoardDialog';
 import EditPicUserDialog from '../components/Dialog/EditPicUserDialog/EditPicUserDialog';
 import Button from '@material-ui/core/Button';
 import DeleteButton from '../components/Buttons/DeleteButton';
-import {
-    getBoardsandPosts,
-    followUser,
-    unfollowUser,
-    fetchProfileInfo,
-    clearError
-} from '../actions/profileActions';
+import { followUser, unfollowUser, fetchProfileInfo, clearError } from '../actions/profileActions';
 import Posts from '../components/Posts/Posts';
 import _ from 'lodash';
 import './stylesheet/Profile.css';
@@ -28,7 +22,7 @@ import ProfilePic from '../components/Profile/ProfilePic';
 class Profile extends Component {
     state = {
         username: '',
-        activePanel: 'board',
+        activePanel: 'boards',
         SnackBar: true
     };
 
@@ -49,14 +43,6 @@ class Profile extends Component {
 
     onCreatePress = item => {
         this.props.history.push(`/profile/${this.state.username}/${item}/create`);
-    };
-
-    onCreateBoardPress = () => {
-        this.props.history.push(`/profile/${this.state.username}/board/create`);
-    };
-
-    onCreatePostPress = () => {
-        this.props.history.push(`/profile/${this.state.username}/post/create`);
     };
 
     onFollowPress = () => {
@@ -194,6 +180,23 @@ class Profile extends Component {
         );
     };
 
+    renderFavouritesButton = () => {
+        if (this.props.profileStore.isCurrentUser) {
+            return (
+                <Button
+                    color="primary"
+                    variant={this.state.activePanel === 'favourites' ? 'contained' : 'text'}
+                    onClick={() => this.toggleTabs('favourites')}
+                    style={{
+                        margin: '10px'
+                    }}
+                >
+                    Favourites
+                </Button>
+            );
+        }
+    };
+
     renderCreateButtons = () => {
         const {
             userStore: { user, authenticated },
@@ -252,14 +255,28 @@ class Profile extends Component {
         }
     };
 
+    renderActiveTab = () => {
+        switch (this.state.activePanel) {
+        case 'boards':
+            return this.renderBoards();
+        case 'posts':
+            return this.renderPosts();
+        case 'favourites':
+            return this.renderFavourites();
+        default:
+            return this.renderBoards();
+        }
+    };
+
     render () {
         const {
             profileStore: { profileInfo, loading, isCurrentUser }
         } = this.props;
+        const { activePanel } = this.state;
         if (_.isUndefined(profileInfo) || loading) {
             return <CircularProgress className="spinner" />;
         }
-        console.log(profileInfo);
+        console.log(isCurrentUser);
         return (
             <div>
                 <Route path="/profile/:username/edit" component={EditPicUserDialog} />
@@ -274,7 +291,7 @@ class Profile extends Component {
                         <ProfilePic
                             profile={profileInfo.profile}
                             username={profileInfo.username}
-                            className={isCurrentUser ? 'profilePic' : ''}
+                            className={isCurrentUser ? 'profilePic' : 'text'}
                             isCurrentUser={isCurrentUser}
                         />
                         <div>
@@ -288,12 +305,13 @@ class Profile extends Component {
                     <div />
                     <div>{this.renderCreateButtons()}</div>
                 </div>
-                <div style={{ display: this.state.activePanel === 'board' ? 'grid' : 'none' }}>
-                    <div className="tabSection">
+                <div style={{ display: 'grid' }}>
+                    <div className= {isCurrentUser ? 'tabSectionCurrent' : 'tabSection'}>
                         <div>
                             <Button
                                 color="primary"
-                                variant={'contained'}
+                                variant={activePanel === 'boards' ? 'contained' : 'text'}
+                                onClick={() => this.toggleTabs('boards')}
                                 style={{
                                     margin: '10px'
                                 }}
@@ -302,119 +320,29 @@ class Profile extends Component {
                             </Button>
                             <Button
                                 color="primary"
-                                onClick={() => this.toggleTabs('post')}
+                                variant={activePanel === 'posts' ? 'contained' : 'text'}
+                                onClick={() => this.toggleTabs('posts')}
                                 style={{
                                     margin: '10px'
                                 }}
                             >
                                 Posts
                             </Button>
-                            <Button
-                                color="primary"
-                                onClick={() => this.toggleTabs('favourite')}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Favourites
-                            </Button>
+                            {this.renderFavouritesButton()}
                         </div>
                         <div />
                     </div>
                     <div className="activePanel">
                         <div
                             className={
-                                profileInfo.boards.length === 0 ? 'gridContainer1' : 'gridContainer'
+                                profileInfo[activePanel].length === 0
+                                    ? 'gridContainer1'
+                                    : 'gridContainer'
                             }
                         >
-                            {this.renderBoards()}
+                            {this.renderActiveTab()}
                         </div>
                     </div>
-                </div>
-                <div style={{ display: this.state.activePanel === 'post' ? 'grid' : 'none' }}>
-                    <div className="tabSection">
-                        <div>
-                            <Button
-                                color="primary"
-                                onClick={() => this.toggleTabs('board')}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Boards
-                            </Button>
-                            <Button
-                                color="primary"
-                                variant={'contained'}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Posts
-                            </Button>
-                            <Button
-                                color="primary"
-                                onClick={() => this.toggleTabs('favourite')}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Favourites
-                            </Button>
-                        </div>
-                        <div />
-                    </div>
-                    <div className="Panel">
-                        <div
-                            className={
-                                profileInfo.posts.length === 0 ? 'postContainer1' : 'postContainer'
-                            }
-                        >
-                            <div
-                                style={{
-                                    width: '90vw'
-                                }}
-                            >
-                                {this.renderPosts()}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div style={{ display: this.state.activePanel === 'favourite' ? 'grid' : 'none' }}>
-                    <div className="tabSection">
-                        <div>
-                            <Button
-                                color="primary"
-                                onClick={() => this.toggleTabs('board')}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Boards
-                            </Button>
-                            <Button
-                                id="post"
-                                color="primary"
-                                onClick={() => this.toggleTabs('post')}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Posts
-                            </Button>
-                            <Button
-                                color="primary"
-                                variant={'contained'}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Favourites
-                            </Button>
-                        </div>
-                        <div />
-                    </div>
-                    <div className="activePanel">{this.renderFavourites()}</div>
                 </div>
                 {this.renderSnackBarError()}
             </div>
@@ -430,7 +358,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
     return bindActionCreators(
         {
-            getBoardsandPosts,
             followUser,
             unfollowUser,
             fetchProfileInfo,

@@ -53,6 +53,14 @@
 .tabSection {
     min-height: 18vh;
     display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+}
+
+.tabSectionCurrent {
+    min-height: 18vh;
+    display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
     justify-items: center;
