@@ -5,7 +5,7 @@ import BoardList from './BoardList';
 import PostDetails from './PostDetails';
 import { favouritePost } from '../../actions/profileActions';
 import { connect } from 'react-redux';
-
+import { withRouter } from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip';
 import StarIcon from '@material-ui/icons/Star';
 
@@ -56,15 +56,20 @@ const Post = ({
     profileImage,
     authenticated,
     favouritePost,
-    favourites
+    favourites,
+    history
 }) => {
     const classes = useStyles();
     const [favourited, setFavourite] = useState(favourites.indexOf(post._id) === -1);
 
     const onFavouritePress = () => {
         const isFavourited = favourited ? 'favourite' : 'unfavourite';
-        favouritePost(post.user.username, post._id, isFavourited);
-        setFavourite(!favourited);
+        if (authenticated) {
+            favouritePost(post.user.username, post._id, isFavourited);
+            setFavourite(!favourited);
+        } else {
+            history.push('/login');
+        }
     };
 
     return (
@@ -102,7 +107,9 @@ const Post = ({
     );
 };
 
-export default connect(
-    null,
-    { favouritePost }
-)(Post);
+export default withRouter(
+    connect(
+        null,
+        { favouritePost }
+    )(Post)
+);
