@@ -25,10 +25,23 @@ const PostSchema = new Schema({
         type: String,
         required: true
     },
+    comments: [{type: Schema.Types.ObjectId, ref: 'comment'}],
     date: {
         type: Date,
         default: Date.now
     }
 });
+
+PostSchema.virtual('users', {
+    ref: 'users',
+    localField: '_id',
+    foreignField: 'user'
+});
+
+// PostSchema.virtual('comment', {
+//     ref: 'comment',
+//     localField: '_id',
+//     foreignField: 'comments'
+// });
 
 module.exports = mongoose.model('posts', PostSchema, 'posts');

@@ -45,12 +45,12 @@ router.post('/login', [
     pub,
     async (req, res) => {
         const user = await User.findOne({email: req.body.email})
-            .populate({path: 'posts', populate: {path: 'user', select: 'username name profile'}})
-            // .populate({ path: 'favourites', populate: { path: 'user', select: 'username name profile' } })
-            .populate({
-                path: 'boards',
-                populate: {path: 'posts', select: '_id image', options: {limit: 9}}
-            })
+            // .populate({path: 'posts', populate: {path: 'user', select: 'username name profile'}})
+            // // .populate({ path: 'favourites', populate: { path: 'user', select: 'username name profile' } })
+            // .populate({
+            //     path: 'boards',
+            //     populate: {path: 'posts', select: '_id image', options: {limit: 9}}
+            // })
             .exec();
         if (!user) {
             return res.status(400).json({success: false, message: 'Could not authenticate'});

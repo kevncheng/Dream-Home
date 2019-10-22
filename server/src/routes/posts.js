@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const {User, Post, Board} = require('../models');
+const {User, Post, Board, Comment} = require('../models');
 const {auth, pub} = require('../middleware');
 const PostValidation = require('./validate/post');
 
@@ -13,7 +13,7 @@ const _ = require('lodash');
 router.get('/', [
     pub,
     async (req, res) => {
-        const {search_filter = '', easy_filters = '',size = 20} = req.query;
+        const {search_filter = '', easy_filters = '', size = 20} = req.query;
         try {
             let query;
             let searchTags = [];
@@ -34,6 +34,7 @@ router.get('/', [
             const posts = await Post.find(query)
                 .limit(parseInt(size))
                 .sort({$natural: -1})
+                .select('-comments')
                 .populate({path: 'user', select: 'username name profile'})
                 .lean();
             const postsSize = await Post.find(query).countDocuments();
@@ -43,6 +44,23 @@ router.get('/', [
         }
     }
 ]);
+
+// @route    GET posts/:id/comment
+// @desc     gets comments from post id
+// @access   Public
+router.get('/:id/comment', async (req, res) => {
+    try {
+        const comments = await Post.findOne({_id: req.params.id})
+            .select('comments')
+            .populate({
+                path: 'comments',
+                populate: {path: 'user', select: 'username name profile'}
+            });
+        return res.json(comments);
+    } catch (err) {
+        return res.status(400).json(err.message);
+    }
+});
 
 //authenticated routes below this middleware
 router.use(auth);
@@ -75,5 +93,19 @@ router.delete('/:id', [
         }
     }
 ]);
+// @route    GET posts/:id/comment
+// @desc     gets comments from post id
+// @access   Private
+router.put('/:id/comment', async (req, res) => {
+    try {
+        const comment = await Comment.create({user: req.decoded._id, comment: req.body.comment});
+        const post = await Post.findByIdAndUpdate(req.params.id, {
+            $addToSet: {comments: comment}
+        });
+        return res.json(post);
+    } catch (err) {
+        return res.status(400).json({error: err.message});
+    }
+});
 
 module.exports = router;
