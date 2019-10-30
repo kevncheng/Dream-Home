@@ -3,26 +3,29 @@ import { withStyles } from '@material-ui/styles';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Post from './Post';
-import MorePosts from './MorePosts';
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import TextField from '@material-ui/core/TextField';
 import { getBoardsandPosts } from '../../actions/profileActions';
 import { boardService } from '../../services/board';
-import { fetchPosts } from '../../actions/postActions';
+import { fetchPosts, fetchComments, postComment } from '../../actions/postActions';
+import Comments from './Comments';
+import _ from 'lodash';
 
 const styles = theme => ({
     post: {
         marginBottom: theme.spacing(4)
-    },
-    more: {
-        marginTop: theme.spacing(4)
     }
 });
 
 class PostPage extends React.Component {
     state = {
         id: '',
-        board: ''
+        board: '',
+        comment: '',
+        viewComments: false
     };
 
     componentDidMount () {
@@ -31,6 +34,7 @@ class PostPage extends React.Component {
         if (!this.props.post(id)) {
             this.props.fetchPosts('', '', '');
         }
+        // this.props.fetchComments(id);
     }
 
     handleChange = e => {
@@ -52,13 +56,59 @@ class PostPage extends React.Component {
         }
     };
 
+    renderCommentLoading = () => {
+        const {
+            commentsStore: { loading, comments }
+        } = this.props;
+        if (loading && _.isEmpty(comments)) {
+            return <CircularProgress />;
+        }
+    };
+
+    onViewPressed = () => {
+        const { match, fetchComments } = this.props;
+        fetchComments(match.params.id);
+        this.setState({ viewComments: true });
+    }
+
+    renderViewComments = () => {
+        const { viewComments } = this.state;
+        if (viewComments) {
+            return <List>{this.renderComments()}</List>;
+        }
+        return (
+            <Button onClick={() => this.onViewPressed()}>
+                View or Post Comments
+            </Button>
+        );
+    }
+
+    renderComments = () => {
+        const {
+            commentsStore: { comments }
+        } = this.props;
+        return comments.map((comment, i) => {
+            return <Comments comment={comment} key={i} />;
+        });
+    };
+
+    onCommentPressed = async () => {
+        const { match, postComment, fetchComments } = this.props;
+        try {
+            await postComment(match.params.id, this.state.comment);
+            await fetchComments(match.params.id);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     render () {
         const {
             classes,
             userStore: { authenticated, user },
             post,
-            morePosts,
-            match
+            match,
+            commentsStore
         } = this.props;
         if (!post(match.params.id)) {
             return (
@@ -71,7 +121,8 @@ class PostPage extends React.Component {
                             right: '0',
                             left: '0',
                             margin: 'auto'
-                        }}/>
+                        }}
+                    />
                 </div>
             );
         }
@@ -83,7 +134,9 @@ class PostPage extends React.Component {
                 </div>
             );
         }
-
+        // console.log(commentsStore)
+        // console.log(user)
+        console.log(this.props.posts);
         return (
             <div>
                 <div className={classes.post}>
@@ -94,12 +147,31 @@ class PostPage extends React.Component {
                         post={post(match.params.id)}
                         boards={authenticated ? user.boards : []}
                         authenticated={authenticated}
-                        favourites = {user.favourites}
+                        favourites={user.favourites}
                     />
                 </div>
                 <Divider component={'hr'} />
                 <div className={classes.more}>
-                    <MorePosts posts={morePosts} />
+                    <h2>Comments</h2>
+                    <div style = {{ display: this.state.viewComments ? 'block' : 'none' }}>
+                        <TextField
+                            id="outlined-multiline-static"
+                            label="Write a Comment"
+                            multiline
+                            rows="4"
+                            defaultValue="Default Value"
+                            className={classes.textField}
+                            variant="outlined"
+                            value = {this.state.comment}
+                            onChange = {e => this.setState({ comment: e.target.value })}
+                            fullWidth
+                            style = {{ marginRight: '10px', marginLeft: '10px' }}
+                        />
+                        <Button style = {{ float: 'right' }}onClick = {() => this.onCommentPressed()}>Comment!</Button>
+                    </div>
+                    
+                    {this.renderCommentLoading()}
+                    {this.renderViewComments()}
                 </div>
             </div>
         );
@@ -109,21 +181,24 @@ class PostPage extends React.Component {
 const mapStateToProps = state => ({
     userStore: state.UserStore,
     post: id => {
-        if (state.posts.posts.length || state.UserStore.authenticated) {
+        if (!_.isEmpty(state.posts.posts) || state.UserStore.authenticated) {
             return (
                 state.posts.posts.find(post => id === post._id) ||
                 state.UserStore.user.posts.find(post => id === post._id)
             );
         }
     },
-    morePosts: state.PostStore.morePosts
+    posts: state.posts,
+    commentsStore: state.CommentsStore
 });
 
 function mapDispatchToProps (dispatch) {
     return bindActionCreators(
         {
             getBoardsandPosts,
-            fetchPosts
+            fetchPosts,
+            fetchComments,
+            postComment
         },
         dispatch
     );

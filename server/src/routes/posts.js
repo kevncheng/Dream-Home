@@ -48,7 +48,7 @@ router.get('/', [
 // @route    GET posts/:id/comment
 // @desc     gets comments from post id
 // @access   Public
-router.get('/:id/comment', async (req, res) => {
+router.get('/:id/comment', [pub, async (req, res) => {
     try {
         const comments = await Post.findOne({_id: req.params.id})
             .select('comments')
@@ -60,7 +60,7 @@ router.get('/:id/comment', async (req, res) => {
     } catch (err) {
         return res.status(400).json(err.message);
     }
-});
+}]);
 
 //authenticated routes below this middleware
 router.use(auth);
