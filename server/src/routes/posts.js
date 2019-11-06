@@ -45,6 +45,25 @@ router.get('/', [
     }
 ]);
 
+// @route    GET posts/:id/
+// @desc     Get post from id
+// @access   Public
+router.get('/:id', [
+    pub,
+    async (req, res) => {
+        try {
+            const post = await Post.findById(req.params.id)
+                .populate({path: 'user', select: 'username name profile'})
+                .lean();
+            if(post === null) return res.status(404).json({message:'Post not found'});
+            return res.json(post);
+        } catch (err) {
+            return res.status(500).send('Something went wrong with the server');
+        }
+    }
+]);
+
+
 // @route    GET posts/:id/comment
 // @desc     gets comments from post id
 // @access   Public
