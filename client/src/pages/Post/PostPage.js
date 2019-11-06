@@ -10,7 +10,7 @@ import List from '@material-ui/core/List';
 import TextField from '@material-ui/core/TextField';
 import { getBoardsandPosts } from '../../actions/profileActions';
 import { boardService } from '../../services/board';
-import { fetchPosts, fetchComments, postComment } from '../../actions/postActions';
+import { fetchPosts, fetchCurrentPost, fetchComments, postComment } from '../../actions/postActions';
 import Comments from './Comments';
 import _ from 'lodash';
 
@@ -22,19 +22,14 @@ const styles = theme => ({
 
 class PostPage extends React.Component {
     state = {
-        id: '',
+        id: this.props.match.params.id,
         board: '',
         comment: '',
         viewComments: false
     };
 
     componentDidMount () {
-        const id = this.props.match.params.id;
-        this.setState({ id });
-        if (!this.props.post(id)) {
-            this.props.fetchPosts('', '', '');
-        }
-        // this.props.fetchComments(id);
+        this.props.fetchCurrentPost(this.props.match.params.id);
     }
 
     handleChange = e => {
@@ -106,11 +101,9 @@ class PostPage extends React.Component {
         const {
             classes,
             userStore: { authenticated, user },
-            post,
-            match,
-            commentsStore
+            post
         } = this.props;
-        if (!post(match.params.id)) {
+        if (post.postFound === null || post.loading) {
             return (
                 <div>
                     <CircularProgress
@@ -126,17 +119,14 @@ class PostPage extends React.Component {
                 </div>
             );
         }
-
-        if (!post(match.params.id)) {
+        if (!post.postFound && !post.loading) {
             return (
                 <div>
                     <h1>No Post found</h1>
                 </div>
             );
-        }
-        // console.log(commentsStore)
-        // console.log(user)
-        console.log(this.props.posts);
+        };
+
         return (
             <div>
                 <div className={classes.post}>
@@ -144,14 +134,14 @@ class PostPage extends React.Component {
                         handleSave={e => this.save(e)}
                         handleSelectBoard={this.handleChange}
                         value={this.state.board}
-                        post={post(match.params.id)}
+                        post={this.props.post}
                         boards={authenticated ? user.boards : []}
                         authenticated={authenticated}
                         favourites={user.favourites}
                     />
                 </div>
                 <Divider component={'hr'} />
-                <div className={classes.more}>
+                <div>
                     <h2>Comments</h2>
                     <div style = {{ display: this.state.viewComments ? 'block' : 'none' }}>
                         <TextField
@@ -159,7 +149,6 @@ class PostPage extends React.Component {
                             label="Write a Comment"
                             multiline
                             rows="4"
-                            defaultValue="Default Value"
                             className={classes.textField}
                             variant="outlined"
                             value = {this.state.comment}
@@ -169,7 +158,6 @@ class PostPage extends React.Component {
                         />
                         <Button style = {{ float: 'right' }}onClick = {() => this.onCommentPressed()}>Comment!</Button>
                     </div>
-                    
                     {this.renderCommentLoading()}
                     {this.renderViewComments()}
                 </div>
@@ -178,17 +166,9 @@ class PostPage extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
     userStore: state.UserStore,
-    post: id => {
-        if (!_.isEmpty(state.posts.posts) || state.UserStore.authenticated) {
-            return (
-                state.posts.posts.find(post => id === post._id) ||
-                state.UserStore.user.posts.find(post => id === post._id)
-            );
-        }
-    },
-    posts: state.posts,
+    post: state.PostStore,
     commentsStore: state.CommentsStore
 });
 
@@ -197,6 +177,7 @@ function mapDispatchToProps (dispatch) {
         {
             getBoardsandPosts,
             fetchPosts,
+            fetchCurrentPost,
             fetchComments,
             postComment
         },

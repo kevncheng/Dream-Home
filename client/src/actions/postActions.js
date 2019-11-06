@@ -8,7 +8,8 @@ import {
     FETCH_COMMENTS_FAIL,
     FETCHING_COMMENTS,
     POST_COMMENT_SUCCESS,
-    POST_COMMENT_FAIL
+    POST_COMMENT_FAIL,
+    FETCH_CURRENT_POST
 } from './types';
 import axios from 'axios';
 
@@ -34,7 +35,27 @@ export const fetchPosts = (search_filter, easy_filters, userId, size) => async d
         });
     } catch (err) {
         dispatch({
-            type: FETCH_POSTS_FAIL
+            type: FETCH_POSTS_FAIL,
+            payload: err.message
+        });
+    }
+};
+
+// Fetch a single post
+export const fetchCurrentPost = post_id => async dispatch => {
+    try {
+        dispatch({
+            type: FETCHING_POSTS
+        });
+        const res = await axios.get(`/posts/${post_id}`);
+        dispatch({
+            type: FETCH_CURRENT_POST,
+            payload: res.data
+        });
+    } catch (err) {
+        dispatch({
+            type: FETCH_POSTS_FAIL,
+            payload: err.response.data
         });
     }
 };
@@ -57,7 +78,6 @@ export const postComment = (post_id, comment) => async dispatch => {
     try {
         const res = await axios.put(`/posts/${post_id}/comment`, { comment });
         dispatch({ type: POST_COMMENT_SUCCESS, payload: res.data.comments });
-        console.log(res.data);
     } catch (err) {
         dispatch({ type: POST_COMMENT_FAIL, payload: err.message });
     }

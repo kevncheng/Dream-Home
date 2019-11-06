@@ -1,28 +1,20 @@
-import postPic from '../assets/posts/post_ex.png';
-import banna from '../assets/posts/banana.jpg';
-import interior from '../assets/posts/interiour.jpg';
-import live from '../assets/posts/live.jpg';
-import livingroom from '../assets/posts/livingroom.jpg';
-import plant1 from '../assets/posts/plant1.jpg';
-import plant2 from '../assets/posts/plant2.jpg';
-import plant3 from '../assets/posts/plant3.jpg';
-import plant4 from '../assets/posts/plant4.jpg';
+import { FETCH_POSTS_FAIL, FETCHING_POSTS, FETCH_CURRENT_POST } from '../actions/types';
 
-const initialState = {
-    posts: [{ _id: 'test', image: postPic, author: 'Delores Jones', title: 'Small background garden', description: 'A small garden doesn\'t mean you can\'t create a chic outdoor space', date: 'Published 20 July 2019' }],
-    morePosts: [{ image: banna, title: 'Dreamy minimal interior' }, {
-        image: interior,
-        title: 'Banana Tree'
-    }, { image: live, title: 'Ideas to fill your living room' }, {
-        image: livingroom,
-        title: 'amazing live plant decorations'
-    }, { image: plant1, title: 'test' }, { image: plant2, title: 'test' }, {
-        image: plant3,
-        title: 'test'
-    }, { image: plant4, title: 'test' }],
-    temporary: [postPic, banna, interior, live, livingroom, plant1]
+const INITIAL_STATE = {
+    loading: false,
+    postFound: null
 };
 
-export default (state = initialState, action) => {
-    return state;
+export default (state = INITIAL_STATE, action) => {
+    const { type, payload } = action;
+    switch (type) {
+    case FETCHING_POSTS:
+        return { ...state, loading: true };
+    case FETCH_CURRENT_POST:
+        return { ...state, loading: false, ...payload, postFound: true };
+    case FETCH_POSTS_FAIL:
+        return { ...state, loading: false, err: payload, postFound: false };
+    default:
+        return state;
+    }
 };
