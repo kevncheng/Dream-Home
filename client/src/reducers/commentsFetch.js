@@ -9,7 +9,7 @@ export default (state = INITIAL_STATE, action) => {
     const { type, payload } = action;
     switch (type) {
     case FETCHING_COMMENTS:
-        return { ...state, loading: true, comments: [] };
+        return { ...state, loading: true };
     case FETCH_COMMENTS_SUCCESS:
         return { ...state, loading: false, comments: payload };
     case FETCH_COMMENTS_FAIL:
