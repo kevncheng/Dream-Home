@@ -80,18 +80,24 @@ class PostPage extends React.Component {
 
     renderComments = () => {
         const {
-            commentsStore: { comments }
+            commentsStore: { comments },
+            history
         } = this.props;
         return comments.map((comment, i) => {
-            return <Comments comment={comment} key={i} />;
+            return <Comments comment={comment} key={i} history = {history} />;
         });
     };
 
     onCommentPressed = async () => {
-        const { match, postComment, fetchComments } = this.props;
+        const { match, postComment, fetchComments, userStore: { authenticated }, history } = this.props;
         try {
-            await postComment(match.params.id, this.state.comment);
-            await fetchComments(match.params.id);
+            if (authenticated) {
+                await postComment(match.params.id, this.state.comment);
+                await fetchComments(match.params.id);
+                this.setState({comment: ''});
+            } else if (!authenticated) {
+                history.push('/login');
+            }
         } catch (error) {
             console.log(error);
         }
@@ -127,6 +133,7 @@ class PostPage extends React.Component {
             );
         };
 
+        // console.log(this.props.commentsStore)
         return (
             <div>
                 <div className={classes.post}>
@@ -141,32 +148,43 @@ class PostPage extends React.Component {
                     />
                 </div>
                 <Divider component={'hr'} />
-                <div>
+                <div style = {{ margin: '10px'}}>
                     <h2>Comments</h2>
-                    <div style = {{ display: this.state.viewComments ? 'block' : 'none' }}>
-                        <TextField
-                            id="outlined-multiline-static"
-                            label="Write a Comment"
-                            multiline
-                            rows="4"
-                            className={classes.textField}
-                            variant="outlined"
-                            value = {this.state.comment}
-                            onChange = {e => this.setState({ comment: e.target.value })}
-                            fullWidth
-                            style = {{ marginRight: '10px', marginLeft: '10px' }}
-                        />
-                        <Button style = {{ float: 'right' }}onClick = {() => this.onCommentPressed()}>Comment!</Button>
+                    <div style = {{ display: this.state.viewComments ? 'block' : 'none', margin: '10px'}}>
+                        <div style = {{paddingBottom: '20px'}}>
+                            <TextField
+                                id="outlined-multiline-static"
+                                multiline
+                                rows="4"
+                                margin = 'normal'
+                                placeholder = 'Write a comment'
+                                variant="outlined"
+                                value = {this.state.comment}
+                                onChange = {e => this.setState({ comment: e.target.value })}
+                                fullWidth
+                            />
+
+                            <div style = {{float: 'right', paddingBottom: '10px', zIndex: 1}}>
+                                <Button 
+                                    onClick = {() => this.onCommentPressed()}
+                                    
+                                >
+                                Comment
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                     {this.renderCommentLoading()}
-                    {this.renderViewComments()}
+                    <div style = {{width: '95%'}}>
+                        {this.renderViewComments()}
+                    </div>
                 </div>
             </div>
         );
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
     userStore: state.UserStore,
     post: state.PostStore,
     commentsStore: state.CommentsStore
