@@ -112,8 +112,8 @@ router.delete('/:id', [
         }
     }
 ]);
-// @route    GET posts/:id/comment
-// @desc     gets comments from post id
+// @route    PUT posts/:id/comment
+// @desc     PUT comments from post id
 // @access   Private
 router.put('/:id/comment', async (req, res) => {
     try {
@@ -122,6 +122,21 @@ router.put('/:id/comment', async (req, res) => {
             $addToSet: {comments: comment}
         });
         return res.json(post);
+    } catch (err) {
+        return res.status(400).json({error: err.message});
+    }
+});
+
+router.delete('/:id/comment/:commentID', async (req,res) => {
+    try {
+        const comment = await Comment.findOneAndDelete({ $and: [{_id: req.params.commentID}, {user: req.decoded.id}]});
+        if(comment) {
+            const post = await Post.updateOne({ _id: req.params.id}, { $pullAll: {comments: [req.params.commentID]}});
+            return res.jason(post);
+        } else {
+            throw new Error('You do not have authorization to delete this comment');
+        }
+        
     } catch (err) {
         return res.status(400).json({error: err.message});
     }
