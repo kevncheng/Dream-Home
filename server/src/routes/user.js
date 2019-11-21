@@ -259,7 +259,10 @@ router.post('/:username/posts', [
         if (req.file) {
             try {
                 const post = await Post.create({
-                    ...req.body,
+                    title: req.body.title,
+                    link: req.body.link,
+                    description: req.body.description,
+                    tags: req.body.tags.split(','),
                     user: user._id,
                     image: req.file.location
                 });
