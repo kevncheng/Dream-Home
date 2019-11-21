@@ -44,18 +44,17 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const NavSearch = ({ search, handleSearch, handleChange, clear, posts: { loading }, history }) => {
+const NavSearch = ({ search, handleSearch, handleChange, clear, posts, history }) => {
     const classes = useStyles();
 
     function renderClearButton () {
-        if (search && loading) {
+        if (search && posts.loading) {
             return <CircularProgress size={12} />;
         } else if (search) {
             return <CloseIcon fontSize={'small'} onClick={clear} />;
         }
         return <div/>;
     }
-
     return (
         <form onSubmit={handleSearch} noValidate>
             <Input
