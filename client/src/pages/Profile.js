@@ -121,7 +121,7 @@ class Profile extends Component {
                         <div
                             style={{
                                 display: 'grid',
-                                gridTemplateColumns: '1fr 1fr'
+                                gridTemplateColumns: '1fr 0.2fr'
                             }}
                         >
                             <div>
