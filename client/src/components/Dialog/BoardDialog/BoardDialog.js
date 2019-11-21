@@ -34,9 +34,9 @@ class BoardDialog extends Component {
     };
 
     onCreatePress = async () => {
-        if (this.state.title.length < 3 || this.state.title.length > 12) {
+        if (this.state.title.length < 3 || this.state.title.length > 20) {
             this.setState({
-                smallText: 'Name must at least 3 to 12 characters long',
+                smallText: 'Name must at least 3 to 20 characters long',
                 nameError: true
             });
         } else {
