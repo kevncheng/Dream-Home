@@ -17,7 +17,8 @@ import {
     DELETE_FAIL,
     SIGN_IN_SUCCESS,
     SIGN_IN_FAIL,
-    FAVOURITE_POST
+    FAVOURITE_POST,
+    POST_COMMENT_FAIL
 } from '../actions/types';
 
 const initialState = {
@@ -104,21 +105,21 @@ export default (state = initialState, action) => {
         return { ...state, error: action.payload.error };
     case SAVE_INTERESTS_ERROR:
         return { ...state, error: action.error };
-    case DELETE_SUCCESS:
-        if (action.payload.item === 'posts') {
-            state.user.boards = state.user.boards.map(board => {
-                board.posts = board.posts.filter(post => post._id !== action.payload.id);
-                return board;
-            });
-        }
-        state.user[action.payload.item] = state.user[action.payload.item].filter(
-            item => item._id !== action.payload.id
-        );
-        return {
-            ...state,
-            loading: false,
-            error: action.payload.error
-        };
+    // case DELETE_SUCCESS:
+    //     if (action.payload.item === 'posts') {
+    //         state.user.boards = state.user.boards.map(board => {
+    //             board.posts = board.posts.filter(post => post._id !== action.payload.id);
+    //             return board;
+    //         });
+    //     }
+    //     state.user[action.payload.item] = state.user[action.payload.item].filter(
+    //         item => item._id !== action.payload.id
+    //     );
+    //     return {
+    //         ...state,
+    //         loading: false,
+    //         error: action.payload.error
+    //     };
     case FAVOURITE_POST:
         const updateFavourites = {
             ...state.user,
@@ -130,6 +131,8 @@ export default (state = initialState, action) => {
         return { ...state, error: action.payload.error };
     case CLEAR_ERROR:
         return { ...state, error: { message: '', status: '' } };
+    case POST_COMMENT_FAIL:
+        return { ...state, error: { message: 'Please log in to comment', status: 'error' } };
     default:
         return state;
     }
