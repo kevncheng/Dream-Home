@@ -135,14 +135,14 @@ class PostDialog extends React.Component {
         if (image.length < 1) {
             this.setState({ imageError: 'Please include atleast one image', SnackBar: true });
         }
-        if (title.length < 3 || title.length > 15) {
-            this.setState({ titleError: 'Must be atleast 3 or less than 15 characters' });
+        if (title.length < 3 || title.length > 20) {
+            this.setState({ titleError: 'Must be atleast 3 or less than 20 characters' });
         }
         if (link.length < 3 || link.length > 15) {
             this.setState({ linkError: 'Must be atleast 3 or less than 15 characters' });
         }
-        if (description.length < 3 || description.length > 200) {
-            this.setState({ descriptionError: 'Must be atleast 3 to 200 characters' });
+        if (description.length < 3 || description.length > 1000) {
+            this.setState({ descriptionError: 'Must be atleast 3 to 1000 characters' });
         } else if (image.length > 0 && !titleError && !linkError && !descriptionError) {
             const formData = createFormData({ title, link, description, image: image[0], tags });
             // image.forEach(file => formData.append('image', file));
@@ -174,7 +174,6 @@ class PostDialog extends React.Component {
             image,
             imageError
         } = this.state;
-
         // Redirect user to profile if not authorized
         if (userStore.authenticated) {
             if (userStore.user.username !== params.username) {
@@ -191,7 +190,6 @@ class PostDialog extends React.Component {
             >
                 <div onClick={e => e.stopPropagation()}>
                     <DialogTitle
-                        style={{ textAlign: 'center' }}
                         id="form-dialog-title"
                         onClose={this.onCloseClick}
                     >
