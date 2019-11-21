@@ -36,7 +36,7 @@ export const fetchPosts = (search_filter, easy_filters, userId, size) => async d
     } catch (err) {
         dispatch({
             type: FETCH_POSTS_FAIL,
-            payload: err.message
+            // payload: err.message
         });
     }
 };
@@ -55,7 +55,7 @@ export const fetchCurrentPost = post_id => async dispatch => {
     } catch (err) {
         dispatch({
             type: FETCH_POSTS_FAIL,
-            payload: err.response.data
+            // payload: err.response.data
         });
     }
 };
