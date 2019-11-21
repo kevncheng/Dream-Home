@@ -58,7 +58,7 @@ const LoginForm = ({
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <DialogContent style={{ width: '300px' }}>
+            <DialogContent style={{ width: '300px', overflowX: 'hidden' }}>
                 <TextField
                     type="email"
                     id="email"
@@ -79,7 +79,7 @@ const LoginForm = ({
                     required
                 />
             </DialogContent>
-            <DialogContent style={{ width: '300px' }}>
+            <DialogContent style={{ width: '300px', overflowX: 'hidden' }}>
                 <TextField
                     type="password"
                     id="password"

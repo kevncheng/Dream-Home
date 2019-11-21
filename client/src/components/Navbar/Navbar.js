@@ -48,7 +48,7 @@ const Navbar = ({ userStore: { authenticated, user }, logout, history, location,
     }
 
     function handleSearch (event) {
-        event.preventDefault();
+        event.preventDefault();  
         history.push(`/?search_filter=${search}`);
     }
 

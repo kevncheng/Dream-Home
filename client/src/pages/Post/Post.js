@@ -71,7 +71,6 @@ const Post = ({
             history.push('/login');
         }
     };
-
     return (
         <Grid container direction="row" justify="center">
             <Grid item xs={6}>

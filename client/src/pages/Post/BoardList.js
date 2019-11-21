@@ -15,8 +15,9 @@ const useStyles = makeStyles(theme => ({
     },
     board: {
         display: 'inline-block',
+        postion: 'relative',
         minWidth: 'calc(100% - 100px)',
-        margin: '0.3rem 0 0 1rem',
+        margin: '0.3rem 0 0 1rem',  
         '&:before': {
             display: 'none'
         },
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // eslint-disable-next-line react/prop-types
-const BoardList = ({ boards, handleSelect, value, handleSave, visible }) => {
+const BoardList = ({ boards = [], handleSelect, value, handleSave, visible }) => {
     const classes = useStyles();
 
     if (!visible) {
@@ -48,8 +49,15 @@ const BoardList = ({ boards, handleSelect, value, handleSave, visible }) => {
                         name: 'board',
                         id: 'board'
                     }}
+                    MenuProps={{
+                        getContentAnchorEl: null,
+                        anchorOrigin: {
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }
+                    }}
                 >
-                    <MenuItem value="" button={false} component={'li'}>Select board</MenuItem>
+                    <MenuItem  value="" button={false} component={'li'}>Select board</MenuItem>
                     {boards.map((board, i) => {
                         return (
                             <MenuItem key={i} value={board._id} button={false} component={'li'}>
