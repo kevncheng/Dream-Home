@@ -9,7 +9,9 @@ import {
     FETCHING_COMMENTS,
     POST_COMMENT_SUCCESS,
     POST_COMMENT_FAIL,
-    FETCH_CURRENT_POST
+    FETCH_CURRENT_POST,
+    DELETE_COMMENT_FAIL,
+    DELETE_COMMENT_SUCCESS
 } from './types';
 import axios from 'axios';
 
@@ -80,5 +82,20 @@ export const postComment = (post_id, comment) => async dispatch => {
         dispatch({ type: POST_COMMENT_SUCCESS, payload: res.data.comments });
     } catch (err) {
         dispatch({ type: POST_COMMENT_FAIL, payload: err.message });
+    }
+};
+
+// Delete a comment
+export const deleteComment = comment_id => async dispatch => {
+    try {
+        await axios.delete(`/posts/comment/${comment_id}`);
+        dispatch({
+            type: DELETE_COMMENT_SUCCESS,
+            payload: comment_id
+        });
+    } catch (err) {
+        dispatch({
+            type: DELETE_COMMENT_FAIL
+        });
     }
 };

@@ -133,7 +133,6 @@ class PostPage extends React.Component {
             );
         };
 
-        // console.log(this.props.commentsStore)
         return (
             <div>
                 <div className={classes.post}>
