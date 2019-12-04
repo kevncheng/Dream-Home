@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const db = process.env.MONGO_URI;
-const uri = process.env.NODE_ENV === 'dev' ? process.env.MONGO_URI + '/pineapple' : process.env.MONGO_URI + '/test';
+const uri = process.env.NODE_ENV === 'dev' ? process.env.MONGO_URI + '/pineapple' : process.env.MONGO_URI;
 
 if(!process.env.MONGO_URI) {
     throw new Error('No Mongo URI provided in environment');
