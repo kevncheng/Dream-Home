@@ -8,8 +8,7 @@
     "lint": "eslint src/**/*.js",
     "lint:fix": "eslint src/**/*.js --fix",
     "unit": "./node_modules/.bin/mocha ./test/unit --exit",
-    "integration": "./node_modules/.bin/mocha ./test/integration --exit",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "integration": "./node_modules/.bin/mocha ./test/integration --exit"
   },
   "dependencies": {
     "aws-sdk": "^2.503.0",
