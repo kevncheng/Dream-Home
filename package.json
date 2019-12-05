@@ -2,5 +2,11 @@
   "scripts": {
     "start":"cd server && npm install && npm start",
     "heroku-postbuild":"cd client && npm install && npm run build"
+  },
+  "name": "Dream Home",
+  "description": "a really cool app",
+  "version": "1.0.0",
+  "engines": {
+    "node": "8.12.0"
   }
 }
