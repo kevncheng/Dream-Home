@@ -3,11 +3,11 @@ mongoose.Promise = global.Promise;
 
 let uri = '';
 if(process.env.NODE_ENV === 'dev') {
-    uri = process.env.MONGODB_URI;
-} else if(process.env.NODE_ENV === 'prod') {
+    uri = process.env.MONGO_URI + '/pineapple';
+} else if(process.env.NODE_ENV === 'production') {
     uri = process.env.MONGODB_URI;
 } else {
-    uri = process.env.MONGODB_URI + '/test';
+    uri = process.env.MONGO_URI + '/test';
 }
 
 if(!uri) {
