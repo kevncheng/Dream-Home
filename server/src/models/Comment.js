@@ -14,7 +14,7 @@ const CommentSchema = new Schema({
     childComments: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'comments'
+            ref: 'comment'
         }
     ],
     comment: {
@@ -27,4 +27,4 @@ const CommentSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('comment', CommentSchema);
+module.exports = mongoose.model('comment', CommentSchema, 'comment');
