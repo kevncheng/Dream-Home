@@ -74,6 +74,27 @@ router.get('/:id/comment', [pub, async (req, res) => {
             .populate({
                 path: 'comments',
                 populate: {path: 'user', select: 'username name profile'}
+            })
+            .populate({
+                path: 'comments',
+                populate: {path: 'childComments', populate: {path: 'user', select: 'username name profile'}}
+            });
+        return res.json(comments);
+    } catch (err) {
+        return res.status(400).json(err.message);
+    }
+}]);
+
+// @route    GET posts/:id/reply
+// @desc     GET replies from post id
+// @access   Public
+router.get('/:id/reply', [pub, async (req, res) => {
+    try {
+        const comments = await Comment.findOne({_id: req.params.id})
+            .select('childComments')
+            .populate({
+                path: 'childComments',
+                populate: {path: 'user', select: 'username name profile'}
             });
         return res.json(comments);
     } catch (err) {
@@ -127,6 +148,9 @@ router.put('/:id/comment', async (req, res) => {
     }
 });
 
+// @route    Delete posts/comment/:CommentID
+// @desc     Delete comment from comment id
+// @access   Private
 router.delete('/comment/:commentID', async (req,res) => {
     try {
         const comment = await Comment.findOneAndDelete({ $and: [{_id: req.params.commentID}, {user: req.decoded._id}]});
@@ -135,6 +159,21 @@ router.delete('/comment/:commentID', async (req,res) => {
         }
         return res.json({message: 'The comment has been succesfully deleted'});
         
+    } catch (err) {
+        return res.status(400).json({error: err.message});
+    }
+});
+
+// @route    PUT posts/comment/:CommentID
+// @desc     PUT reply to parent comment id
+// @access   Private
+router.put('/:id/reply', async (req,res) => {
+    try {
+        const reply = await Comment.create({user: req.decoded._id, comment: req.body.comment, parentComment: req.params.id});
+        await Comment.findByIdAndUpdate(req.params.id, {
+            $addToSet: {childComments: reply}
+        });
+        return res.json(reply);
     } catch (err) {
         return res.status(400).json({error: err.message});
     }
