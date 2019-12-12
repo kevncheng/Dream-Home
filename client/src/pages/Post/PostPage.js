@@ -7,12 +7,12 @@ import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
-import TextField from '@material-ui/core/TextField';
 import { getBoardsandPosts } from '../../actions/profileActions';
 import { boardService } from '../../services/board';
 import { fetchPosts, fetchCurrentPost, fetchComments, postComment } from '../../actions/postActions';
-import Comments from './Comments';
+import CommentList from './CommentList';
 import _ from 'lodash';
+import CommentBox from '../../components/Comment/CommentBox';
 
 const styles = theme => ({
     post: {
@@ -81,10 +81,11 @@ class PostPage extends React.Component {
     renderComments = () => {
         const {
             commentsStore: { comments },
+            match,
             history
         } = this.props;
         return comments.map((comment, i) => {
-            return <Comments comment={comment} key={i} history = {history} />;
+            return <CommentList comment={comment} key={i} history = {history} postID = { match.params.id } />;
         });
     };
 
@@ -94,7 +95,7 @@ class PostPage extends React.Component {
             if (authenticated) {
                 await postComment(match.params.id, this.state.comment);
                 await fetchComments(match.params.id);
-                this.setState({comment: ''});
+                this.setState({ comment: '' });
             } else if (!authenticated) {
                 history.push('/login');
             }
@@ -102,6 +103,10 @@ class PostPage extends React.Component {
             console.log(error);
         }
     };
+
+    onChangeText = e => {
+        this.setState({ comment: e.target.value });
+    }
 
     render () {
         const {
@@ -147,34 +152,20 @@ class PostPage extends React.Component {
                     />
                 </div>
                 <Divider component={'hr'} />
-                <div style = {{ margin: '10px'}}>
+                <div style = {{ margin: '10px' }}>
                     <h2>Comments</h2>
-                    <div style = {{ display: this.state.viewComments ? 'block' : 'none', margin: '10px'}}>
-                        <div style = {{paddingBottom: '20px'}}>
-                            <TextField
-                                id="outlined-multiline-static"
-                                multiline
-                                rows="4"
-                                margin = 'normal'
-                                placeholder = 'Write a comment'
-                                variant="outlined"
-                                value = {this.state.comment}
-                                onChange = {e => this.setState({ comment: e.target.value })}
-                                fullWidth
+                    <div style = {{ display: this.state.viewComments ? 'block' : 'none', margin: '10px' }}>
+                        <div style = {{ paddingBottom: '20px' }}>
+                            <CommentBox
+                                type = {'Comment'}
+                                onChangeText = { this.onChangeText }
+                                comment = { this.state.comment }
+                                onCommentPressed = { this.onCommentPressed }
                             />
-
-                            <div style = {{float: 'right', paddingBottom: '10px', zIndex: 1}}>
-                                <Button 
-                                    onClick = {() => this.onCommentPressed()}
-                                    
-                                >
-                                Comment
-                                </Button>
-                            </div>
                         </div>
                     </div>
                     {this.renderCommentLoading()}
-                    <div style = {{width: '95%'}}>
+                    <div style = {{ width: '95%' }}>
                         {this.renderViewComments()}
                     </div>
                 </div>

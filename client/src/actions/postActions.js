@@ -11,7 +11,9 @@ import {
     POST_COMMENT_FAIL,
     FETCH_CURRENT_POST,
     DELETE_COMMENT_FAIL,
-    DELETE_COMMENT_SUCCESS
+    DELETE_COMMENT_SUCCESS,
+    REPLY_SUCCESS,
+    DELETE_REPLY_SUCCESS
 } from './types';
 import axios from 'axios';
 
@@ -37,7 +39,7 @@ export const fetchPosts = (search_filter, easy_filters, userId, size) => async d
         });
     } catch (err) {
         dispatch({
-            type: FETCH_POSTS_FAIL,
+            type: FETCH_POSTS_FAIL
             // payload: err.message
         });
     }
@@ -56,7 +58,7 @@ export const fetchCurrentPost = post_id => async dispatch => {
         });
     } catch (err) {
         dispatch({
-            type: FETCH_POSTS_FAIL,
+            type: FETCH_POSTS_FAIL
             // payload: err.response.data
         });
     }
@@ -86,16 +88,35 @@ export const postComment = (post_id, comment) => async dispatch => {
 };
 
 // Delete a comment
-export const deleteComment = comment_id => async dispatch => {
+export const deleteComment = (comment_id, reply = false) => async dispatch => {
     try {
         await axios.delete(`/posts/comment/${comment_id}`);
-        dispatch({
-            type: DELETE_COMMENT_SUCCESS,
-            payload: comment_id
-        });
+        if (reply) {
+            dispatch({
+                type: DELETE_REPLY_SUCCESS,
+                payload: comment_id
+            });
+        } else {
+            dispatch({
+                type: DELETE_COMMENT_SUCCESS,
+                payload: comment_id
+            });
+        }
     } catch (err) {
         dispatch({
             type: DELETE_COMMENT_FAIL
         });
+    }
+};
+
+// Reply to comment
+export const replyComment = (parent_id, comment, user) => async dispatch => {
+    const { _id, profile, name, username } = user;
+    try {
+        const res = await axios.put(`/posts/${parent_id}/reply`, { comment });
+        res.data.user = { _id, profile, name, username };
+        dispatch({ type: REPLY_SUCCESS, payload: res.data });
+    } catch (err) {
+        dispatch({ type: POST_COMMENT_FAIL, payload: err.message });
     }
 };
