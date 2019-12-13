@@ -28,13 +28,13 @@ export default (state = INITIAL_STATE, action) => {
         return { ...state, comments: _.filter(state.comments, comment => comment._id !== payload) };
     case DELETE_COMMENT_FAIL:
         return { ...state, error: 'Something went wrong' };
-    case DELETE_REPLY_SUCCESS:
-        return { ...state,
-            commments: _.filter(state.comments, comment => {
-                return comment.childComments.some(child => {
-                    return child._id !== payload;
-                });
-            }) };
+    // case DELETE_REPLY_SUCCESS:
+    //     return { ...state,
+    //         commments: state.comments.map(comment => {
+    //             return i === index
+    //             ? 
+    //         })
+    //     };
     case REPLY_SUCCESS:
         const index = _.findIndex(state.comments, { _id: payload.parentComment });
         const newChild = update(state.comments[index].childComments, { $push: [payload] });
@@ -46,7 +46,6 @@ export default (state = INITIAL_STATE, action) => {
                     : comment;
             })
         };
-
     // case DELETE_REPLY_SUCCESS:
     //     return { ...state,
     //         comments: _.filter(state.comments, comment => {
